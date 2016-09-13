@@ -1,3 +1,8 @@
+#Carregar bibliotecas
+library(arules)
+library(RMySQL)
+
+
 #Functions
 clearConsole <- function(){
   cat("\014")
@@ -14,17 +19,28 @@ finishFileLog <- function(nome){
   sink()
   file.show(nome)
 }
+
+query <- function(sql) {
+  mydb = dbConnect(MySQL(), user='root', password='', dbname='consumidor', host='localhost')
+  rs = dbSendQuery(mydb, sql);
+  dataBD <- fetch(rs, n=-1)
+  #dataBD <- fetch(rs, getNumRows(mydb, "WAVELENGTH"))
+  huh <- dbHasCompleted(rs)
+  dbClearResult(rs)
+  dbDisconnect(mydb)
+  return (dataBD)
+}
+
+clearConsole();
+date <- query("SELECT * FROM consumidor")
+str(date);
+
+
 #Fim Functions
 clearConsole();
 
-#Carregar bibliotecas
-library(arules)
-library(foreign)
-
-#Ler arquivo Arrf
-dadosBrutos <- read.arff("C:\\Users\\Marcos\\Downloads\\dados_descoberta_conhecimento\\reclamacoes.arff")
 #Selecionar atributos
-dados <- subset(dadosBrutos, select=c("NomeFantasia", "Assunto", "Problema", "AvaliacaoReclamacao", "Sexo", ""))
+dados <- subset(dadosBrutos, select=c("NomeFantasia", "Assunto", "Problema", "AvaliacaoReclamacao", "Sexo"))
 clearConsole();
 
 #Execução apriori
