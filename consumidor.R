@@ -21,26 +21,29 @@ finishFileLog <- function(nome){
 }
 
 query <- function(sql) {
+  dbDataType(RMySQL::MySQL(), "a")
   mydb = dbConnect(MySQL(), user='root', password='', dbname='consumidor', host='localhost')
   rs = dbSendQuery(mydb, sql);
   dataBD <- fetch(rs, n=-1)
   #dataBD <- fetch(rs, getNumRows(mydb, "WAVELENGTH"))
   huh <- dbHasCompleted(rs)
   dbClearResult(rs)
-  dbDisconnect(mydb)
+    dbDisconnect(mydb)
   return (dataBD)
 }
 
 clearConsole();
-date <- query("SELECT * FROM consumidor")
-str(date);
+dadosBrutos <- query("SELECT NomeFantasia, Assunto, Problema, AvaliacaoReclamacao, Sexo FROM consumidor")
+str(dadosBrutos)
 
-
+#Converter caracteres para factor
+dados <- as.data.frame(unclass(dadosBrutos))
+str(dados)
 #Fim Functions
 clearConsole();
 
 #Selecionar atributos
-dados <- subset(dadosBrutos, select=c("NomeFantasia", "Assunto", "Problema", "AvaliacaoReclamacao", "Sexo"))
+#dados <- subset(dadosBrutos, select=c("NomeFantasia", "Assunto", "Problema", "AvaliacaoReclamacao", "Sexo"))
 clearConsole();
 
 #Execução apriori
