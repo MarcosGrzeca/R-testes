@@ -1,36 +1,12 @@
 #Carregar bibliotecas
 library(arules)
-library(RMySQL)
 
+#Carrega functions
+source(file="C:\\Users\\Marcos\\Documents\\GitHub\\R-testes\\functions.R")
 
-#Functions
-clearConsole <- function(){
-  cat("\014")
-}
-
-initFileLog <- function(nome){
-  zz <- file(nome, open = "wt")
-  sink(zz)
-  sink(zz, type = "message")
-}
-
-finishFileLog <- function(nome){
-  sink(type = "message")
-  sink()
-  file.show(nome)
-}
-
-query <- function(sql) {
-  dbDataType(RMySQL::MySQL(), "a")
-  mydb = dbConnect(MySQL(), user='root', password='', dbname='consumidor', host='localhost')
-  rs = dbSendQuery(mydb, sql);
-  dataBD <- fetch(rs, n=-1)
-  #dataBD <- fetch(rs, getNumRows(mydb, "WAVELENGTH"))
-  huh <- dbHasCompleted(rs)
-  dbClearResult(rs)
-    dbDisconnect(mydb)
-  return (dataBD)
-}
+#Configurações
+DATABASE <- "consumidor"
+str(DATABASE)
 
 clearConsole();
 dadosBrutos <- query("SELECT NomeFantasia, Assunto, Problema, AvaliacaoReclamacao, Sexo FROM consumidor")
@@ -38,9 +14,6 @@ str(dadosBrutos)
 
 #Converter caracteres para factor
 dados <- as.data.frame(unclass(dadosBrutos))
-str(dados)
-#Fim Functions
-clearConsole();
 
 #Selecionar atributos
 #dados <- subset(dadosBrutos, select=c("NomeFantasia", "Assunto", "Problema", "AvaliacaoReclamacao", "Sexo"))
