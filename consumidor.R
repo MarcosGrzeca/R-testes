@@ -1,6 +1,11 @@
 #Carregar bibliotecas
 library(arules)
 
+#verificar atributos relacionados
+library(mlbench)
+library(caret)
+
+
 #Carrega functions
 source(file="C:\\Users\\Marcos\\Documents\\GitHub\\R-testes\\functions.R")
 
@@ -10,7 +15,42 @@ DATABASE <- "enem"
 clearConsole();
 #dadosBrutos <- query("SELECT MesAbertura, SegmentoMercado, NomeFantasia, AvaliacaoReclamacao FROM consumidor")
 
-dadosBrutos <- query("SELECT SEXO, IDADE, UF_ESC FROM enem")
+dadosBrutos <- query("SELECT mediaNumerica FROM enem WHERE  UF_RESIDENCIA = 'PE' AND IN_PRESENCA_CN = 1 AND IN_PRESENCA_CH = 1 AND IN_PRESENCA_LC = 1 AND IN_PRESENCA_MT = 1 AND IN_STATUS_REDACAO <> 6 ")
+dadosBrutos$mediaBoxPlot <- as.data.frame(unclass(dadosBrutos$mediaBoxPlot))
+dadosBrutos$classeIBGE <- as.data.frame(unclass(dadosBrutos$classeIBGE))
+str(dadosBrutos)
+
+summary(dadosBrutos)
+str(dadosBrutos$teste2)
+
+#testes
+dadosBrutos$teste <- 0;
+dadosBrutos$teste2 <- c("small", "large");
+dadosBrutos$teste[dadosBrutos$Q001 == "B"] <- "1"
+
+#cbind unifica conjuntos
+
+
+
+min(dadosBrutos$mediaNumerica)
+max(dadosBrutos$mediaNumerica)
+mean(dadosBrutos$mediaNumerica)
+
+media <- sd(dadosBrutos$mediaNumerica)
+str(media)
+
+
+x <- boxplot(dadosBrutos$mediaNumerica, data=dadosBrutos, main="BoxPlot Média")
+str(x)
+
+#Verificar correlacionados
+correlationMatrix <- cor(dadosBrutos[,1:171])
+# summarize the correlation matrix
+print(correlationMatrix)
+# find attributes that are highly corrected (ideally >0.75)
+highlyCorrelated <- findCorrelation(correlationMatrix, cutoff=0.5)
+# print indexes of highly correlated attributes
+str(highlyCorrelated)
 
 
 #Discretizar mês abertura
