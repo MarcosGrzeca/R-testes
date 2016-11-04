@@ -6,6 +6,7 @@ library(mlbench)
 library(caret)
 
 
+
 #Carrega functions
 source(file="C:\\Users\\Marcos\\Documents\\GitHub\\R-testes\\functions.R")
 
@@ -13,57 +14,31 @@ source(file="C:\\Users\\Marcos\\Documents\\GitHub\\R-testes\\functions.R")
 DATABASE <- "enem"
 
 clearConsole();
-#dadosBrutos <- query("SELECT MesAbertura, SegmentoMercado, NomeFantasia, AvaliacaoReclamacao FROM consumidor")
-
-dadosBrutos <- query("SELECT mediaNumerica FROM enem WHERE  UF_RESIDENCIA = 'PE' AND IN_PRESENCA_CN = 1 AND IN_PRESENCA_CH = 1 AND IN_PRESENCA_LC = 1 AND IN_PRESENCA_MT = 1 AND IN_STATUS_REDACAO <> 6 ")
-dadosBrutos$mediaBoxPlot <- as.data.frame(unclass(dadosBrutos$mediaBoxPlot))
-dadosBrutos$classeIBGE <- as.data.frame(unclass(dadosBrutos$classeIBGE))
+dadosBrutos <- query("SELECT COD_MUNICIPIO_RESIDENCIA, COD_ESCOLA, COD_MUNICIPIO_ESC, ID_LOCALIZACAO_ESC, SIT_FUNC_ESC, TP_SEXO, NACIONALIDADE, COD_MUNICIPIO_NASCIMENTO, UF_NASCIMENTO, ST_CONCLUSAO, ANO_CONCLUIU, IN_TP_ENSINO, TP_ESTADO_CIVIL, TP_COR_RACA, IN_CERTIFICADO, COD_MUNICIPIO_PROVA, ID_PROVA_CN, ID_PROVA_CH, ID_PROVA_LC, ID_PROVA_MT, TP_LINGUA, Q001, Q002, Q003, Q004, Q005, Q006, Q007, Q008, Q009, Q010, Q011, Q012, Q013, Q014, Q015, Q016, Q017, Q018, Q019, Q020, Q021, Q022, Q023, Q024, Q025, Q026, Q027, Q028, Q029, Q030, Q031, Q032, Q033, Q034, Q035, Q036, Q037, Q038, Q039, Q040, Q041, Q042, Q043, Q044, Q045, Q046, Q047, Q048, Q049, Q050, Q051, Q052, Q053, Q054, Q055, Q056, Q057, Q058, Q059, Q060, Q061, Q062, Q063, Q064, Q065, Q066, Q067, Q068, Q069, Q070, Q071, Q072, Q073, Q074, Q075, Q076, classeIBGE, media, totalCursos, faixaEtaria, necess_especiais, ate_necess_especiais, TP_ESCOLA FROM enem WHERE TP_ESCOLA <> ''")
 str(dadosBrutos)
-
-summary(dadosBrutos)
-str(dadosBrutos$teste2)
-
-#testes
-dadosBrutos$teste <- 0;
-dadosBrutos$teste2 <- c("small", "large");
-dadosBrutos$teste[dadosBrutos$Q001 == "B"] <- "1"
-
-#cbind unifica conjuntos
-
-
-
-min(dadosBrutos$mediaNumerica)
-max(dadosBrutos$mediaNumerica)
-mean(dadosBrutos$mediaNumerica)
-
-media <- sd(dadosBrutos$mediaNumerica)
-str(media)
-
-
-x <- boxplot(dadosBrutos$mediaNumerica, data=dadosBrutos, main="BoxPlot Média")
-str(x)
-
-#Verificar correlacionados
-correlationMatrix <- cor(dadosBrutos[,1:171])
-# summarize the correlation matrix
-print(correlationMatrix)
-# find attributes that are highly corrected (ideally >0.75)
-highlyCorrelated <- findCorrelation(correlationMatrix, cutoff=0.5)
-# print indexes of highly correlated attributes
-str(highlyCorrelated)
-
-
-#Discretizar mês abertura
-#dadosBrutos$MesAbertura <- discretize(dadosBrutos$MesAbertura, method = "frequency", 12)
-#dadosBrutos$MesAbertura <- discretize(dadosBrutos$MesAbertura, categories = 12)
-
-
-#Converter caracteres para factor
 dados <- as.data.frame(unclass(dadosBrutos))
 str(dados)
 
-#Selecionar atributos
-#dados <- subset(dadosBrutos, select=c("NomeFantasia", "Assunto", "Problema", "AvaliacaoReclamacao", "Sexo"))
+dados$Q004 <- discretize(dados$Q004, method = "interval", 20)
+dados$Q040 <- discretize(dados$Q040, method = "interval", 13)
+dados$TP_LINGUA <- discretize(dados$TP_LINGUA, method = "interval", 2)
+dados$ID_PROVA_CN <- discretize(dados$ID_PROVA_CN, method = "interval", 5)
+dados$ID_PROVA_CH <- discretize(dados$ID_PROVA_CH, method = "interval", 5)
+dados$ID_PROVA_LC <- discretize(dados$ID_PROVA_LC, method = "interval", 5)
+dados$ID_PROVA_MT <- discretize(dados$ID_PROVA_MT, method = "interval", 5)
+dados$NACIONALIDADE <- discretize(dados$NACIONALIDADE, method = "interval", 4)
+dados$COD_MUNICIPIO_NASCIMENTO <- discretize(dados$COD_MUNICIPIO_NASCIMENTO, method = "interval", 1879)
+dados$COD_MUNICIPIO_PROVA <- discretize(dados$COD_MUNICIPIO_PROVA, method = "interval", 239)
+dados$COD_MUNICIPIO_RESIDENCIA <- discretize(dados$COD_MUNICIPIO_RESIDENCIA, method = "interval", 185)
+dados$TP_COR_RACA <- discretize(dados$TP_COR_RACA, method = "interval", 6)
+dados$TP_ESTADO_CIVIL <- discretize(dados$TP_ESTADO_CIVIL, method = "interval", 4)
+dados$ST_CONCLUSAO <- discretize(dados$ST_CONCLUSAO, method = "interval", 4)
+dados$necess_especiais <- discretize(dados$necess_especiais, method = "interval", 2)
+dados$ate_necess_especiais <- discretize(dados$ate_necess_especiais, method = "interval", 2)
+
+str(dados)
+
+
 clearConsole();
 
 #Execução apriori
@@ -73,7 +48,7 @@ clearConsole();
 #rules <- apriori(dados, parameter = list(minlen=2, supp=0.001, conf=0.5), control = list(verbose=F))
 #rules <- apriori(dados, parameter = list(minlen=2, supp=0.001, conf=0.5), appearance = list(rhs=c("AvaliacaoReclamacao="), default="lhs"), control = list(verbose=F))
 
-rules <- apriori(dados, parameter = list(minlen=2, supp=0.04, conf=0.5), appearance = list(rhs=c("Area=Telecomunicações"), default="lhs"), control = list(verbose=F))
+rules <- apriori(dados, parameter = list(minlen=2, supp=0.04, conf=0.5), appearance = list(rhs=c("TP_ESCOLA=1", "TP_ESCOLA=2", "media=C"), default="lhs"), control = list(verbose=F))
 
 #Reordenar regras
 rules.sorted <- sort(rules, by="lift")
@@ -92,3 +67,27 @@ print("Resultado Final")
 initFileLog("result.txt")
 inspect(rules.pruned)
 finishFileLog("result.txt")
+
+x <- boxplot(dadosBrutos$mediaNumerica, data=dadosBrutos, main="BoxPlot Média")
+str(x)
+
+#Verificar correlacionados
+correlationMatrix <- cor(dadosBrutos[,1:171])
+# summarize the correlation matrix
+print(correlationMatrix)
+# find attributes that are highly corrected (ideally >0.75)
+highlyCorrelated <- findCorrelation(correlationMatrix, cutoff=0.5)
+# print indexes of highly correlated attributes
+str(highlyCorrelated)
+
+str(dados)
+
+summary(dados)
+
+
+min(dadosBrutos$mediaNumerica)
+max(dadosBrutos$mediaNumerica)
+mean(dadosBrutos$mediaNumerica)
+
+media <- sd(dadosBrutos$mediaNumerica)
+str(media)
