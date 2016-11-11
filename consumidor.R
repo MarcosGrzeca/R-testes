@@ -68,27 +68,41 @@ dadosBrutos$Q074[dadosBrutos$Q074 == ""] <- NA
 dadosBrutos$Q075[dadosBrutos$Q075 == ""] <- NA
 dadosBrutos$Q076[dadosBrutos$Q076 == ""] <- NA
 dadosBrutos$Q076[dadosBrutos$Q076 == "\r"] <- NA
+dadosBrutos$tipoEscola[dadosBrutos$tipoEscola == ""] <- NA
+dadosBrutos$TP_LINGUA[dadosBrutos$TP_LINGUA == 0] <- "I"
+dadosBrutos$TP_LINGUA[dadosBrutos$TP_LINGUA == 1] <- "E"
+
+dadosBrutos$NACIONALIDADE[dadosBrutos$NACIONALIDADE == 1] <- "B"
+dadosBrutos$NACIONALIDADE[dadosBrutos$NACIONALIDADE == 2] <- "BN"
+dadosBrutos$NACIONALIDADE[dadosBrutos$NACIONALIDADE == 3] <- "E"
+dadosBrutos$NACIONALIDADE[dadosBrutos$NACIONALIDADE == 4] <- "BNE"
+dadosBrutos$necess_especiais[dadosBrutos$necess_especiais == 1] <- "S"
+dadosBrutos$necess_especiais[dadosBrutos$necess_especiais == 0] <- "N"
+dadosBrutos$ate_necess_especiais[dadosBrutos$ate_necess_especiais == 0] <- "N"
+dadosBrutos$ate_necess_especiais[dadosBrutos$ate_necess_especiais == 1] <- "S"
+dadosBrutos$TP_COR_RACA[dadosBrutos$TP_COR_RACA == 0] <- "ND"
+dadosBrutos$TP_COR_RACA[dadosBrutos$TP_COR_RACA == 1] <- "BR"
+dadosBrutos$TP_COR_RACA[dadosBrutos$TP_COR_RACA == 2] <- "PR"
+dadosBrutos$TP_COR_RACA[dadosBrutos$TP_COR_RACA == 3] <- "PA"
+dadosBrutos$TP_COR_RACA[dadosBrutos$TP_COR_RACA == 4] <- "AM"
+dadosBrutos$TP_COR_RACA[dadosBrutos$TP_COR_RACA == 5] <- "IN"
+
 
 dados <- as.data.frame(unclass(dadosBrutos))
 str(dados)
 
+
 dados$Q004 <- discretize(dados$Q004, method = "interval", 20)
 dados$Q040 <- discretize(dados$Q040, method = "interval", 13)
-dados$TP_LINGUA <- discretize(dados$TP_LINGUA, method = "interval", 2)
 dados$ID_PROVA_CN <- discretize(dados$ID_PROVA_CN, method = "interval", 5)
 dados$ID_PROVA_CH <- discretize(dados$ID_PROVA_CH, method = "interval", 5)
 dados$ID_PROVA_LC <- discretize(dados$ID_PROVA_LC, method = "interval", 5)
 dados$ID_PROVA_MT <- discretize(dados$ID_PROVA_MT, method = "interval", 5)
-dados$NACIONALIDADE <- discretize(dados$NACIONALIDADE, method = "interval", 4)
 dados$COD_MUNICIPIO_NASCIMENTO <- discretize(dados$COD_MUNICIPIO_NASCIMENTO, method = "interval", 1879)
 dados$COD_MUNICIPIO_PROVA <- discretize(dados$COD_MUNICIPIO_PROVA, method = "interval", 239)
 dados$COD_MUNICIPIO_RESIDENCIA <- discretize(dados$COD_MUNICIPIO_RESIDENCIA, method = "interval", 185)
-dados$TP_COR_RACA <- discretize(dados$TP_COR_RACA, method = "interval", 6)
 dados$TP_ESTADO_CIVIL <- discretize(dados$TP_ESTADO_CIVIL, method = "interval", 4)
 dados$ST_CONCLUSAO <- discretize(dados$ST_CONCLUSAO, method = "interval", 4)
-dados$necess_especiais <- discretize(dados$necess_especiais, method = "interval", 2)
-dados$ate_necess_especiais <- discretize(dados$ate_necess_especiais, method = "interval", 2)
-
 str(dados)
 
 
@@ -115,7 +129,7 @@ clearConsole();
 #Apriori todas medias
 #rules <- apriori(dados, parameter = list(minlen=2, supp=0.35, conf=0.5, maxtime =100), appearance = list(rhs=c("media=A", "media=B", "media=C"), default="lhs"), control = list(verbose=F))
 
-rules <- apriori(dados, parameter = list(minlen=2, supp=0.05, conf=0.5, maxtime =120), appearance = list(rhs=c("media=A"), default="lhs"), control = list(verbose=F))
+rules <- apriori(dados, parameter = list(minlen=2, supp=0.04, conf=0.4, maxtime =80), appearance = list(rhs=c("media=C"), default="lhs"), control = list(verbose=F))
 
 #Reordenar regras
 rules.sorted <- sort(rules, by="lift")
