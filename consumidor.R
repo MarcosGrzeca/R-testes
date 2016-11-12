@@ -86,23 +86,78 @@ dadosBrutos$TP_COR_RACA[dadosBrutos$TP_COR_RACA == 2] <- "PR"
 dadosBrutos$TP_COR_RACA[dadosBrutos$TP_COR_RACA == 3] <- "PA"
 dadosBrutos$TP_COR_RACA[dadosBrutos$TP_COR_RACA == 4] <- "AM"
 dadosBrutos$TP_COR_RACA[dadosBrutos$TP_COR_RACA == 5] <- "IN"
+dadosBrutos$TP_ESTADO_CIVIL[dadosBrutos$TP_ESTADO_CIVIL == 0] <- "Sol"
+dadosBrutos$TP_ESTADO_CIVIL[dadosBrutos$TP_ESTADO_CIVIL == 1] <- "Cas"
+dadosBrutos$TP_ESTADO_CIVIL[dadosBrutos$TP_ESTADO_CIVIL == 2] <- "Div"
+dadosBrutos$TP_ESTADO_CIVIL[dadosBrutos$TP_ESTADO_CIVIL == 3] <- "Viu"
+dadosBrutos$ID_PROVA_CN[dadosBrutos$ID_PROVA_CN == 199] <- "AZUL"
+dadosBrutos$ID_PROVA_CN[dadosBrutos$ID_PROVA_CN == 200] <- "AMARELO"
+dadosBrutos$ID_PROVA_CN[dadosBrutos$ID_PROVA_CN == 201] <- "BRANCO"
+dadosBrutos$ID_PROVA_CN[dadosBrutos$ID_PROVA_CN == 202] <- "ROSA"
+dadosBrutos$ID_PROVA_CN[dadosBrutos$ID_PROVA_CN == 216] <- "BRANCO - ADAP"
+dadosBrutos$ID_PROVA_CH[dadosBrutos$ID_PROVA_CH == 195] <- "AZUL"
+dadosBrutos$ID_PROVA_CH[dadosBrutos$ID_PROVA_CH == 196] <- "AMARELO"
+dadosBrutos$ID_PROVA_CH[dadosBrutos$ID_PROVA_CH == 197] <- "BRANCO"
+dadosBrutos$ID_PROVA_CH[dadosBrutos$ID_PROVA_CH == 198] <- "ROSA"
+dadosBrutos$ID_PROVA_CH[dadosBrutos$ID_PROVA_CH == 215] <- "BRANCO - ADAP"
+dadosBrutos$ID_PROVA_LC[dadosBrutos$ID_PROVA_LC == 203] <- "AMARELO"
+dadosBrutos$ID_PROVA_LC[dadosBrutos$ID_PROVA_LC == 204] <- "CINZA"
+dadosBrutos$ID_PROVA_LC[dadosBrutos$ID_PROVA_LC == 205] <- "AZUL"
+dadosBrutos$ID_PROVA_LC[dadosBrutos$ID_PROVA_LC == 206] <- "ROSA"
+dadosBrutos$ID_PROVA_LC[dadosBrutos$ID_PROVA_LC == 213] <- "CINZA - Reaplicacao"
+dadosBrutos$ID_PROVA_LC[dadosBrutos$ID_PROVA_LC == 217] <- "CINZA - ADAP"
+dadosBrutos$ID_PROVA_MT[dadosBrutos$ID_PROVA_MT == 207] <- "AMARELO"
+dadosBrutos$ID_PROVA_MT[dadosBrutos$ID_PROVA_MT == 208] <- "CINZA"
+dadosBrutos$ID_PROVA_MT[dadosBrutos$ID_PROVA_MT == 209] <- "AZUL"
+dadosBrutos$ID_PROVA_MT[dadosBrutos$ID_PROVA_MT == 210] <- "ROSA"
+dadosBrutos$ID_PROVA_MT[dadosBrutos$ID_PROVA_MT == 214] <- "CINZA - Reaplicacao"
+dadosBrutos$ID_PROVA_MT[dadosBrutos$ID_PROVA_MT == 218] <- "CINZA - ADAP"
+dadosBrutos$Q004[dadosBrutos$Q004 == 1] <- "1"
+dadosBrutos$Q004[dadosBrutos$Q004 == 2] <- "2"
+dadosBrutos$Q004[dadosBrutos$Q004 == 3] <- "3"
+dadosBrutos$Q004[dadosBrutos$Q004 == 4] <- "4"
+dadosBrutos$Q004[dadosBrutos$Q004 == 5] <- "5"
+dadosBrutos$Q004[dadosBrutos$Q004 == 6] <- "6"
+dadosBrutos$Q004[dadosBrutos$Q004 == 7] <- "7"
+dadosBrutos$Q004[dadosBrutos$Q004 == 8] <- "8"
+dadosBrutos$Q004[dadosBrutos$Q004 == 9] <- "9"
+dadosBrutos$Q004[dadosBrutos$Q004 == 10] <- "10"
+dadosBrutos$Q004[dadosBrutos$Q004 == 11] <- "11"
+dadosBrutos$Q004[dadosBrutos$Q004 == 12] <- "12"
+dadosBrutos$Q004[dadosBrutos$Q004 == 13] <- "13"
+dadosBrutos$Q004[dadosBrutos$Q004 == 14] <- "14"
+dadosBrutos$Q004[dadosBrutos$Q004 == 15] <- "15"
+dadosBrutos$Q004[dadosBrutos$Q004 == 16] <- "16"
+dadosBrutos$Q004[dadosBrutos$Q004 == 17] <- "17"
+dadosBrutos$Q004[dadosBrutos$Q004 == 18] <- "18"
+dadosBrutos$Q004[dadosBrutos$Q004 == 19] <- "19"
+dadosBrutos$Q004[dadosBrutos$Q004 == 20] <- "20+"
+dadosBrutos$Q040[dadosBrutos$Q040 == 13] <- "< 14"
+dadosBrutos$Q040[dadosBrutos$Q040 == 14] <- "14"
+dadosBrutos$Q040[dadosBrutos$Q040 == 15] <- "15"
+dadosBrutos$Q040[dadosBrutos$Q040 == 16] <- "16"
+dadosBrutos$Q040[dadosBrutos$Q040 == 17] <- "17"
+dadosBrutos$Q040[dadosBrutos$Q040 == 18] <- "18"
+dadosBrutos$Q040[dadosBrutos$Q040 == 19] <- "19"
+dadosBrutos$Q040[dadosBrutos$Q040 == 20] <- "20"
+dadosBrutos$Q040[dadosBrutos$Q040 == 21] <- "21"
+dadosBrutos$Q040[dadosBrutos$Q040 == 22] <- "22"
+dadosBrutos$Q040[dadosBrutos$Q040 == 23] <- "23"
+dadosBrutos$Q040[dadosBrutos$Q040 == 24] <- "24"
+dadosBrutos$Q040[dadosBrutos$Q040 == 25] <- "25+"
+dadosBrutos$ST_CONCLUSAO[dadosBrutos$ST_CONCLUSAO == 1] <- "A"
+dadosBrutos$ST_CONCLUSAO[dadosBrutos$ST_CONCLUSAO == 2] <- "B"
+dadosBrutos$ST_CONCLUSAO[dadosBrutos$ST_CONCLUSAO == 3] <- "C"
+dadosBrutos$ST_CONCLUSAO[dadosBrutos$ST_CONCLUSAO == 4] <- "D"
 
 
 dados <- as.data.frame(unclass(dadosBrutos))
 str(dados)
 
 
-dados$Q004 <- discretize(dados$Q004, method = "interval", 20)
-dados$Q040 <- discretize(dados$Q040, method = "interval", 13)
-dados$ID_PROVA_CN <- discretize(dados$ID_PROVA_CN, method = "interval", 5)
-dados$ID_PROVA_CH <- discretize(dados$ID_PROVA_CH, method = "interval", 5)
-dados$ID_PROVA_LC <- discretize(dados$ID_PROVA_LC, method = "interval", 5)
-dados$ID_PROVA_MT <- discretize(dados$ID_PROVA_MT, method = "interval", 5)
 dados$COD_MUNICIPIO_NASCIMENTO <- discretize(dados$COD_MUNICIPIO_NASCIMENTO, method = "interval", 1879)
 dados$COD_MUNICIPIO_PROVA <- discretize(dados$COD_MUNICIPIO_PROVA, method = "interval", 239)
 dados$COD_MUNICIPIO_RESIDENCIA <- discretize(dados$COD_MUNICIPIO_RESIDENCIA, method = "interval", 185)
-dados$TP_ESTADO_CIVIL <- discretize(dados$TP_ESTADO_CIVIL, method = "interval", 4)
-dados$ST_CONCLUSAO <- discretize(dados$ST_CONCLUSAO, method = "interval", 4)
 str(dados)
 
 
