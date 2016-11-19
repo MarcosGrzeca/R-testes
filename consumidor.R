@@ -163,7 +163,12 @@ dados <- as.data.frame(unclass(dadosBrutos))
 str(dados)
 
 
-write.table(dados, file = "dump_enem.csv", append = FALSE, quote = TRUE, sep = ",", eol = "\n", na = "?", dec = ".", row.names = TRUE, col.names = TRUE, qmethod = c("escape", "double"), fileEncoding = "")
+#Exportar para CSV
+write.table(dados, file = "dump_enem.csv", append = FALSE, quote = TRUE, sep = ",", eol = "\n", na = "?", dec = ".", row.names = FALSE, col.names = TRUE, qmethod = c("escape", "double"), fileEncoding = "")
+
+#Exportar para ARFF
+library("rio")
+export(dados, "dump_enem.arff")
 
 clearConsole();
 
