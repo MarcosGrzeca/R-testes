@@ -1,14 +1,11 @@
 #Carregar bibliotecas
 library(arules)
-options(max.print = 99999999)
-
-#verificar atributos relacionados
-#library(mlbench)
-#library(caret)
-
+#Exportar para ARFF
+library("rio")
 #NaiveBayes
 library(e1071)
 
+options(max.print = 99999999)
 
 #Carrega functions
 source(file="C:\\Users\\Marcos\\Documents\\GitHub\\R-testes\\functions.R")
@@ -164,11 +161,8 @@ str(dados)
 
 
 #Exportar para CSV
-write.table(dados, file = "dump_enem.csv", append = FALSE, quote = TRUE, sep = ",", eol = "\n", na = "?", dec = ".", row.names = FALSE, col.names = TRUE, qmethod = c("escape", "double"), fileEncoding = "")
-
-#Exportar para ARFF
-library("rio")
-export(dados, "dump_enem.arff")
+write.table(dados, file = "dump_enem2.csv", append = FALSE, quote = TRUE, sep = ",", eol = "\n", na = "?", dec = ".", row.names = FALSE, col.names = TRUE, qmethod = c("escape", "double"), fileEncoding = "")
+#export(dados, "dump_enem.arff")
 
 clearConsole();
 
@@ -218,25 +212,11 @@ modelo <- naiveBayes(dados[1:102], dados[,103])
 str(dados[1, 1])
 dadosTeste <- dados[1, -1]
 str(dadosTeste)
-y_estimado <- predict(modelo, dadosTeste[1, 1], type="class")
-
+dados$mediaPrevista <- predict(modelo, dados, type="class")
+view(dados)
 
 x <- boxplot(dadosBrutos$mediaNumerica, data=dadosBrutos, main="BoxPlot Média")
-str(x)
-
-#Verificar correlacionados
-correlationMatrix <- cor(dadosBrutos[,1:171])
-# summarize the correlation matrix
-print(correlationMatrix)
-# find attributes that are highly corrected (ideally >0.75)
-highlyCorrelated <- findCorrelation(correlationMatrix, cutoff=0.5)
-# print indexes of highly correlated attributes
-str(highlyCorrelated)
-
-str(dados)
-
 summary(dados)
-
 
 min(dadosBrutos$mediaNumerica)
 max(dadosBrutos$mediaNumerica)
