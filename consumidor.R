@@ -162,6 +162,9 @@ dadosBrutos$ST_CONCLUSAO[dadosBrutos$ST_CONCLUSAO == 4] <- "D"
 dados <- as.data.frame(unclass(dadosBrutos))
 str(dados)
 
+
+write.table(dados, file = "dump_enem.csv", append = FALSE, quote = TRUE, sep = ",", eol = "\n", na = "?", dec = ".", row.names = TRUE, col.names = TRUE, qmethod = c("escape", "double"), fileEncoding = "")
+
 clearConsole();
 
 #Execução apriori
