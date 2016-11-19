@@ -149,13 +149,13 @@ dadosBrutos$Q040[dadosBrutos$Q040 == 23] <- "23"
 dadosBrutos$Q040[dadosBrutos$Q040 == 24] <- "24"
 dadosBrutos$Q040[dadosBrutos$Q040 == 25] <- "25+"
 
-#dadosBrutos$ST_CONCLUSAO[dadosBrutos$ST_CONCLUSAO == 1] <- "A"
-#dadosBrutos$ST_CONCLUSAO[dadosBrutos$ST_CONCLUSAO == 2] <- "B"
-#dadosBrutos$ST_CONCLUSAO[dadosBrutos$ST_CONCLUSAO == 3] <- "C"
-#dadosBrutos$ST_CONCLUSAO[dadosBrutos$ST_CONCLUSAO == 4] <- "D"
+dadosBrutos$ST_CONCLUSAO[dadosBrutos$ST_CONCLUSAO == 1] <- "A"
+dadosBrutos$ST_CONCLUSAO[dadosBrutos$ST_CONCLUSAO == 2] <- "B"
+dadosBrutos$ST_CONCLUSAO[dadosBrutos$ST_CONCLUSAO == 3] <- "C"
+dadosBrutos$ST_CONCLUSAO[dadosBrutos$ST_CONCLUSAO == 4] <- "D"
 
 #Converter apenas um campo para fator
-dadosBrutos$ST_CONCLUSAO <- as.factor(dadosBrutos$ST_CONCLUSAO)
+#dadosBrutos$ST_CONCLUSAO <- as.factor(dadosBrutos$ST_CONCLUSAO)
 
 #Convertaer para fator todos campos
 dados <- as.data.frame(unclass(dadosBrutos))
