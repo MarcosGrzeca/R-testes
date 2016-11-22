@@ -1,20 +1,16 @@
 #Carregar bibliotecas
 library(arules)
-#Exportar para ARFF
-library("rio")
-#NaiveBayes
-library(e1071)
-
 options(max.print = 99999999)
 
 #Carrega functions
-source(file="C:\\Users\\Marcos\\Documents\\GitHub\\R-testes\\functions.R")
+DIRETORIO = "C:\\Users\\Marcos\\Documents\\GitHub\\R-testes\\"
+source(file=paste(DIRETORIO,"functions.R", sep = ""))
+source(file=paste(DIRETORIO,"visualizacao.R", sep = ""))
 
 #Configurações
 DATABASE <- "enem"
-
 clearConsole();
-dadosBrutos <- query("SELECT NO_MUNICIPIO_RESIDENCIA, COD_ESCOLA, COD_MUNICIPIO_ESC, ID_LOCALIZACAO_ESC, SIT_FUNC_ESC, TP_SEXO, NACIONALIDADE, NO_MUNICIPIO_NASCIMENTO, UF_NASCIMENTO, ST_CONCLUSAO, ANO_CONCLUIU, IN_TP_ENSINO, TP_ESTADO_CIVIL, TP_COR_RACA, IN_CERTIFICADO, NO_MUNICIPIO_PROVA, ID_PROVA_CN, ID_PROVA_CH, ID_PROVA_LC, ID_PROVA_MT, TP_LINGUA, Q001, Q002, Q004, Q005, Q006, Q007, Q008, Q009, Q010, Q011, Q012, Q013, Q014, Q015, Q016, Q017, Q018, Q019, Q020, Q021, Q022, Q023, Q024, Q025, Q026, Q027, Q028, Q029, Q030, Q031, Q032, Q033, Q034, Q035, Q036, Q037, Q038, Q039, Q040, Q041, Q042, Q043, Q044, Q045, Q046, Q047, Q048, Q049, Q050, Q051, Q052, Q053, Q054, Q055, Q056, Q057, Q058, Q059, Q060, Q061, Q062, Q063, Q064, Q065, Q066, Q067, Q068, Q069, Q070, Q071, Q072, Q073, Q074, Q075, Q076, classeIBGE, totalCursos, faixaEtaria, necess_especiais, ate_necess_especiais, tipoEscola, media FROM enem")
+#dadosBrutos <- query("SELECT NO_MUNICIPIO_RESIDENCIA, COD_ESCOLA, COD_MUNICIPIO_ESC, ID_LOCALIZACAO_ESC, SIT_FUNC_ESC, TP_SEXO, NACIONALIDADE, NO_MUNICIPIO_NASCIMENTO, UF_NASCIMENTO, ST_CONCLUSAO, ANO_CONCLUIU, IN_TP_ENSINO, TP_ESTADO_CIVIL, TP_COR_RACA, IN_CERTIFICADO, NO_MUNICIPIO_PROVA, ID_PROVA_CN, ID_PROVA_CH, ID_PROVA_LC, ID_PROVA_MT, TP_LINGUA, Q001, Q002, Q004, Q005, Q006, Q007, Q008, Q009, Q010, Q011, Q012, Q013, Q014, Q015, Q016, Q017, Q018, Q019, Q020, Q021, Q022, Q023, Q024, Q025, Q026, Q027, Q028, Q029, Q030, Q031, Q032, Q033, Q034, Q035, Q036, Q037, Q038, Q039, Q040, Q041, Q042, Q043, Q044, Q045, Q046, Q047, Q048, Q049, Q050, Q051, Q052, Q053, Q054, Q055, Q056, Q057, Q058, Q059, Q060, Q061, Q062, Q063, Q064, Q065, Q066, Q067, Q068, Q069, Q070, Q071, Q072, Q073, Q074, Q075, Q076, classeIBGE, totalCursos, faixaEtaria, necess_especiais, ate_necess_especiais, tipoEscola, media FROM enem")
 #dadosBrutos <- query("SELECT ID_LOCALIZACAO_ESC, SIT_FUNC_ESC, TP_SEXO, NACIONALIDADE, ST_CONCLUSAO, ANO_CONCLUIU, IN_TP_ENSINO, TP_ESTADO_CIVIL, TP_COR_RACA, IN_CERTIFICADO, ID_PROVA_CN, ID_PROVA_CH, ID_PROVA_LC, ID_PROVA_MT, TP_LINGUA, Q001, Q002, Q004, Q005, Q006, Q007, Q008, Q009, Q010, Q011, Q012, Q013, Q014, Q015, Q016, Q017, Q018, Q019, Q020, Q021, Q022, Q023, Q024, Q025, Q026, Q027, Q028, Q029, Q030, Q031, Q032, Q033, Q034, Q035, Q036, Q037, Q038, Q039, Q040, Q041, Q042, Q043, Q044, Q045, Q046, Q047, Q048, Q049, Q050, Q051, Q052, Q053, Q054, Q055, Q056, Q057, Q058, Q059, Q060, Q061, Q062, Q063, Q064, Q065, Q066, Q067, Q068, Q069, Q070, Q071, Q072, Q073, Q074, Q075, Q076, classeIBGE, totalCursos, faixaEtaria, necess_especiais, ate_necess_especiais, tipoEscola, media FROM enem")
 
 #Campos 200 primeiras regras Apriori
@@ -164,7 +160,7 @@ str(dados)
 
 #Exportar para CSV
 write.table(dados, file = "dump_enem2.csv", append = FALSE, quote = TRUE, sep = ",", eol = "\n", na = "?", dec = ".", row.names = FALSE, col.names = TRUE, qmethod = c("escape", "double"), fileEncoding = "")
-#export(dados, "dump_enem.arff")
+export(dados, "dump_enem_total.arff")
 
 clearConsole();
 
@@ -176,7 +172,7 @@ clearConsole();
 #Apriori todas medias
 #rules <- apriori(dados, parameter = list(minlen=2, supp=0.35, conf=0.5, maxtime =100), appearance = list(rhs=c("media=A", "media=B", "media=C"), default="lhs"), control = list(verbose=F))
 
-rules <- apriori(dados, parameter = list(minlen=3, maxlen=10, supp=0.04, conf=0.41, maxtime = 18000), appearance = list(rhs=c("media=C"), default="lhs"), control = list(verbose=F))
+rules <- apriori(dados, parameter = list(minlen=5, maxlen=7, supp=0.04, conf=0.41, maxtime = 18000), appearance = list(rhs=c("media=C"), default="lhs"), control = list(verbose=F))
 
 #Reordenar regras
 rules.sorted <- sort(rules, by="lift")
@@ -196,28 +192,5 @@ initFileLog("result_C_10_3.txt")
 inspect(rules.pruned)
 finishFileLog("result_C_10_3.txt")
 
-#Naive Bayes
-modelo <- naiveBayes(dados[1:21], dados[,22])
-dados$mediaPrevista <- predict(modelo, dados, type="class")
-view(dados)
 
-
-clearConsole();
-matriz <- matrix(data=0,nrow=3,ncol=3)
-for(i in 1:nrow(dados)) {
-  row <- dados[i,]
-  matriz[row$media, row$mediaPrevista] <- matriz[row$media, row$mediaPrevista] + 1
-}
-matriz
-
-
-#BoxPlot
-x <- boxplot(dadosBrutos$mediaNumerica, data=dadosBrutos, main="BoxPlot Média")
-summary(dados)
-
-min(dadosBrutos$mediaNumerica)
-max(dadosBrutos$mediaNumerica)
-mean(dadosBrutos$mediaNumerica)
-
-media <- sd(dadosBrutos$mediaNumerica)
-str(media)
+source(file=paste(DIRETORIO,"preditiva.R", sep = ""))

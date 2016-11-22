@@ -29,3 +29,7 @@ query <- function(sql) {
   dbDisconnect(mydb)
   return (dataBD)
 }
+
+
+#Exportar para ARFF
+library("rio")
