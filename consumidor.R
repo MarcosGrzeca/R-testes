@@ -6,6 +6,8 @@ options(max.print = 99999999)
 DIRETORIO = "C:\\Users\\Marcos\\Documents\\GitHub\\R-testes\\"
 source(file=paste(DIRETORIO,"functions.R", sep = ""))
 source(file=paste(DIRETORIO,"visualizacao.R", sep = ""))
+source(file=paste(DIRETORIO,"preditiva.R", sep = ""))
+
 
 #Configurações
 DATABASE <- "enem"
@@ -158,10 +160,6 @@ dados <- as.data.frame(unclass(dadosBrutos))
 str(dados)
 
 
-#Exportar para CSV
-write.table(dados, file = "dump_enem2.csv", append = FALSE, quote = TRUE, sep = ",", eol = "\n", na = "?", dec = ".", row.names = FALSE, col.names = TRUE, qmethod = c("escape", "double"), fileEncoding = "")
-export(dados, "dump_enem_total.arff")
-
 clearConsole();
 
 #Execução apriori
@@ -191,6 +189,3 @@ print("Resultado Final")
 initFileLog("result_C_10_3.txt")
 inspect(rules.pruned)
 finishFileLog("result_C_10_3.txt")
-
-
-source(file=paste(DIRETORIO,"preditiva.R", sep = ""))

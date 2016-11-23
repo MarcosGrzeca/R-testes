@@ -33,3 +33,9 @@ query <- function(sql) {
 
 #Exportar para ARFF
 library("rio")
+
+dumpArrf <- function() {
+  #Exportar para CSV
+  #write.table(dados, file = "dump_enem2.csv", append = FALSE, quote = TRUE, sep = ",", eol = "\n", na = "?", dec = ".", row.names = FALSE, col.names = TRUE, qmethod = c("escape", "double"), fileEncoding = "")
+  export(dados, "dump_enem_total.arff")
+}
