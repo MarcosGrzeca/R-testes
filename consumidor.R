@@ -13,14 +13,17 @@ source(file=paste(DIRETORIO,"preditiva.R", sep = ""))
 DATABASE <- "enem"
 clearConsole();
 #dadosBrutos <- query("SELECT NO_MUNICIPIO_RESIDENCIA, COD_ESCOLA, COD_MUNICIPIO_ESC, ID_LOCALIZACAO_ESC, SIT_FUNC_ESC, TP_SEXO, NACIONALIDADE, NO_MUNICIPIO_NASCIMENTO, UF_NASCIMENTO, ST_CONCLUSAO, ANO_CONCLUIU, IN_TP_ENSINO, TP_ESTADO_CIVIL, TP_COR_RACA, IN_CERTIFICADO, NO_MUNICIPIO_PROVA, ID_PROVA_CN, ID_PROVA_CH, ID_PROVA_LC, ID_PROVA_MT, TP_LINGUA, Q001, Q002, Q004, Q005, Q006, Q007, Q008, Q009, Q010, Q011, Q012, Q013, Q014, Q015, Q016, Q017, Q018, Q019, Q020, Q021, Q022, Q023, Q024, Q025, Q026, Q027, Q028, Q029, Q030, Q031, Q032, Q033, Q034, Q035, Q036, Q037, Q038, Q039, Q040, Q041, Q042, Q043, Q044, Q045, Q046, Q047, Q048, Q049, Q050, Q051, Q052, Q053, Q054, Q055, Q056, Q057, Q058, Q059, Q060, Q061, Q062, Q063, Q064, Q065, Q066, Q067, Q068, Q069, Q070, Q071, Q072, Q073, Q074, Q075, Q076, classeIBGE, totalCursos, faixaEtaria, necess_especiais, ate_necess_especiais, tipoEscola, media FROM enem")
-dadosBrutos <- query("SELECT ID_LOCALIZACAO_ESC, SIT_FUNC_ESC, TP_SEXO, NACIONALIDADE, ST_CONCLUSAO, ANO_CONCLUIU, IN_TP_ENSINO, TP_ESTADO_CIVIL, TP_COR_RACA, IN_CERTIFICADO, ID_PROVA_CN, ID_PROVA_CH, ID_PROVA_LC, ID_PROVA_MT, TP_LINGUA, Q001, Q002, Q004, Q005, Q006, Q007, Q008, Q009, Q010, Q011, Q012, Q013, Q014, Q015, Q016, Q017, Q018, Q019, Q020, Q021, Q022, Q023, Q024, Q025, Q026, Q027, Q028, Q029, Q030, Q031, Q032, Q033, Q034, Q035, Q036, Q037, Q038, Q039, Q040, Q041, Q042, Q043, Q044, Q045, Q046, Q047, Q048, Q049, Q050, Q051, Q052, Q053, Q054, Q055, Q056, Q057, Q058, Q059, Q060, Q061, Q062, Q063, Q064, Q065, Q066, Q067, Q068, Q069, Q070, Q071, Q072, Q073, Q074, Q075, Q076, classeIBGE, totalCursos, faixaEtaria, necess_especiais, ate_necess_especiais, tipoEscola, media FROM enem")
+#dadosBrutos <- query("SELECT ID_LOCALIZACAO_ESC, SIT_FUNC_ESC, TP_SEXO, NACIONALIDADE, ST_CONCLUSAO, ANO_CONCLUIU, IN_TP_ENSINO, TP_ESTADO_CIVIL, TP_COR_RACA, IN_CERTIFICADO, ID_PROVA_CN, ID_PROVA_CH, ID_PROVA_LC, ID_PROVA_MT, TP_LINGUA, Q001, Q002, Q004, Q005, Q006, Q007, Q008, Q009, Q010, Q011, Q012, Q013, Q014, Q015, Q016, Q017, Q018, Q019, Q020, Q021, Q022, Q023, Q024, Q025, Q026, Q027, Q028, Q029, Q030, Q031, Q032, Q033, Q034, Q035, Q036, Q037, Q038, Q039, Q040, Q041, Q042, Q043, Q044, Q045, Q046, Q047, Q048, Q049, Q050, Q051, Q052, Q053, Q054, Q055, Q056, Q057, Q058, Q059, Q060, Q061, Q062, Q063, Q064, Q065, Q066, Q067, Q068, Q069, Q070, Q071, Q072, Q073, Q074, Q075, Q076, classeIBGE, totalCursos, faixaEtaria, necess_especiais, ate_necess_especiais, tipoEscola, media FROM enem")
 
-#Campos 200 primeiras regras Apriori
-#dadosBrutos <- query("SELECT ANO_CONCLUIU, Q010, Q015, Q017, classeIBGE, Q021, totalCursos, Q014, Q018, Q019, Q005, Q007, necess_especiais, faixaEtaria, Q024, Q028, Q029, Q011, Q012, Q008, Q023, media FROM enem")
+#Campos 200 primeiras regras Apriori C
+dadosBrutos <- query("SELECT ANO_CONCLUIU, Q010, Q015, Q017, classeIBGE, Q021, totalCursos, Q014, Q018, Q019, Q005, Q007, faixaEtaria, Q024, Q028, Q029, Q011, Q012, Q008, Q023, media FROM enem")
 
+#campos 200 primeiras regras Apriori A
+dadosBrutos <- query("SELECT IN_TP_ENSINO, Q006, Q030, Q033, tipoEscola, NACIONALIDADE, TP_ESTADO_CIVIL, Q026, Q038, Q016, Q012, Q017, Q040, Q022, Q013, media FROM enem")
 
 str(dadosBrutos)
 
+dadosBrutos$IN_TP_ENSINO[dadosBrutos$IN_TP_ENSINO == ""] <- NA
 dadosBrutos$ANO_CONCLUIU[dadosBrutos$ANO_CONCLUIU == ""] <- "2014"
 dadosBrutos$IN_CERTIFICADO[dadosBrutos$IN_CERTIFICADO == ""] <- NA
 dadosBrutos$COD_ESCOLA[dadosBrutos$COD_ESCOLA == ""] <- NA
@@ -170,7 +173,10 @@ clearConsole();
 #Apriori todas medias
 #rules <- apriori(dados, parameter = list(minlen=2, supp=0.35, conf=0.5, maxtime =100), appearance = list(rhs=c("media=A", "media=B", "media=C"), default="lhs"), control = list(verbose=F))
 
-rules <- apriori(dados, parameter = list(minlen=3, maxlen=12, supp=0.05, conf=0.60, maxtime = 30000), appearance = list(rhs=c("media=A"), default="lhs"), control = list(verbose=F))
+rules <- apriori(dados, parameter = list(minlen=2, maxlen=20, supp=0.04, conf=0.41, maxtime = 15000), appearance = list(rhs=c("media=C"), default="lhs"), control = list(verbose=F))
+rules <- apriori(dados, parameter = list(minlen=2, maxlen=20, supp=0.05, conf=0.60, maxtime = 15000), appearance = list(rhs=c("media=A"), default="lhs"), control = list(verbose=F))
+rules44 <- apriori(dados, parameter = list(minlen=2, maxlen=20, supp=0.05, conf=0.60, maxtime = 10), appearance = list(rhs=c("media=A"), default="lhs"), control = list(verbose=F))
+
 
 #Reordenar regras
 rules.sorted <- sort(rules, by="lift")
@@ -186,6 +192,10 @@ rules.pruned <- rules.sorted[!redundant]
 clearConsole();
 
 print("Resultado Final")
-initFileLog("result_C_10_3.txt")
+initFileLog("result200_A.txt")
 inspect(rules.pruned)
-finishFileLog("result_C_10_3.txt")
+finishFileLog("result200_A.txt")
+
+clearConsole()
+regrasA <- rules.pruned
+inspect(regrasA)
