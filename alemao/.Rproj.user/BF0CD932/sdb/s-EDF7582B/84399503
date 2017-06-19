@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "library(RMySQL)\n\n#Functions\nclearConsole <- function(){\n  cat(\"\\014\")\n}\n\ninitFileLog <- function(nome){\n  zz <- file(nome, open = \"wt\")\n  sink(zz)\n  sink(zz, type = \"message\")\n}\n\nfinishFileLog <- function(nome){\n  sink(type = \"message\")\n  sink()\n  file.show(nome)\n}\n\n\nquery <- function(sql) {\n  dbDataType(RMySQL::MySQL(), \"a\")\n  mydb = dbConnect(MySQL(), user='root', password='', dbname=DATABASE, host='localhost')\n  rs = dbSendQuery(mydb, sql);\n  dataBD <- fetch(rs, n=-1)\n  #dataBD <- fetch(rs, getNumRows(mydb, \"WAVELENGTH\"))\n  huh <- dbHasCompleted(rs)\n  dbClearResult(rs)\n  dbDisconnect(mydb)\n  return (dataBD)\n}\n\n\n#Exportar para ARFF\nlibrary(\"rio\")\n\ndump <- function(dadosExport, arquivo) {\n  #Exportar para CSV\n  write.table(dadosExport, file = arquivo, append = FALSE, quote = TRUE, sep = \",\", eol = \"\\n\", na = \"?\", dec = \".\", row.names = FALSE, col.names = TRUE, qmethod = c(\"escape\", \"double\"), fileEncoding = \"\")\n  #export(dados, \"dump_enem_total.arff\")\n}",
+    "created" : 1497821121872.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "951921674",
+    "id" : "84399503",
+    "lastKnownWriteTime" : 1497827246,
+    "last_content_update" : 1497827246365,
+    "path" : "~/GitHub/R-testes/functions.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
