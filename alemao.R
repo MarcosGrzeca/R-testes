@@ -14,7 +14,6 @@ clearConsole();
 dados <- query("SELECT id, texto, alc FROM conversa")
 dados$alc[dados$alc == "cna"] <- "na"
 dados$alc <- as.factor(dados$alc)
-str(dados)
 
 clearConsole()
 
@@ -23,7 +22,6 @@ library(data.table)
 
 setDT(dados)
 setkey(dados, id)
-set.seed(2016L)
 
 prep_fun = tolower
 tok_fun = word_tokenizer
@@ -37,83 +35,60 @@ it_train = itoken(dados$texto,
                   progressbar = TRUE)
 
 vocab = create_vocabulary(it_train, stopwords = stop_words)
-#vocab = create_vocabulary(it_train)
 vectorizer = vocab_vectorizer(vocab)
 dtm_train = create_dtm(it_train, vectorizer)
-
 col_headings <- c('id','texto','alc')
 names(dados) <- col_headings
-
 vectorizer = vocab_vectorizer(vocab)
 dtm_train = create_dtm(it_train, vectorizer)
-#identical(rownames(dtm_train), dados$id)
 
-data <- as.data.frame(as.matrix(dtm_train))
-total <- c(dados, data)
-total <- as.data.frame(total) 
-total <- subset(total, select = -c(texto, id) )
-#export(total2, "alemao_bag.csv")
 
-total <- as.data.frame(unclass(total))
 
-export(total, "dump_enem_total.arff")
+dataM <- as.data.frame(as.matrix(dtm_train))
+dataM <- c(dados, dataM)
+dataM <- as.data.frame(unclass(dataM))
+dataM <- subset(dataM, select = -c(texto, id) )
 
-library('caret')
+convert_count <- function(x) {
+  y <- ifelse(x > 0, 1,0)
+  y <- factor(y, levels=c(0,1), labels=c(NA, 1))
+  y
+}
 
+#dataMa <- apply(dataM, 2, convert_count)
+#dataMa[1:2,]
+dataM[1:2,]
+
+#export(total, "dump_enem_total.arff")
+
+#Naive Bayes
 library(e1071)
-model <- naiveBayes(alc ~ ., data = total)
+model <- naiveBayes(alc ~ ., data = dataM)
+#model <- naiveBayes(dataM[2:ncol(dataM)], dataM[1:1])
 model
 
-train_control <- trainControl(method="cv", number=1)
-#create model
-fit <- train(alc ~ ., data = total, method = "nb", trControl=train_control)
-fit
+pred <- predict(model, dataM)
+table(pred, data$alc)
 
 
-# load the library
-library(caret)
-# load the iris dataset
-data(iris)
-# define training control
+plot(model)
+dataM[1:nrow(dataM),2:ncol(dataM)]
+
+str(nrow(dataM))
+str(ncol(dataM))
+predict(model, dataM[1:nrow(dataM),2:ncol(dataM)], type = "raw")
+
+
+library('caret')
 train_control <- trainControl(method="cv", number=10)
-# fix the parameters of the algorithm
-grid <- expand.grid(.fL=c(0), .usekernel=c(FALSE))
-# train the model
-model <- train(Species~., data=iris, trControl=train_control, method="nb")
-# summarize results
-print(model)
-             
-library(glmnet)
-NFOLDS = 5
-t1 = Sys.time()
-glmnet_classifier = cv.glmnet(x = dtm_train, y = train[['alc']], 
-                              family = 'binomial', 
-                              # L1 penalty
-                              alpha = 1,
-                              # interested in the area under ROC curve
-                              type.measure = "auc",
-                              # 5-fold cross-validation
-                              nfolds = NFOLDS,
-                              # high value is less accurate, but has faster training
-                              thresh = 1e-3,
-                              # again lower number of iterations for faster training
-                              maxit = 1e3)
-print(difftime(Sys.time(), t1, units = 'sec'))
+#create model
+fit <- train(alc ~ ., data = dataM, method = "nb")
 
-plot(glmnet_classifier)
 
-print(paste("max AUC =", round(max(glmnet_classifier$cvm), 4)))
 
-# Note that most text2vec functions are pipe friendly!
-it_test = test$texto %>% 
-  prep_fun %>% 
-  tok_fun %>% 
-  itoken(ids = test$id, 
-         # turn off progressbar because it won't look nice in rmd
-         progressbar = FALSE)
-
-dtm_test = create_dtm(it_test, vectorizer)
-
-preds = predict(glmnet_classifier, dtm_test, type = 'response')[,1]
-glmnet:::auc(test$alc, preds)
-
+data(iris)
+m <- naiveBayes(Species ~ ., data = iris)
+## alternatively:
+m <- naiveBayes(iris[,-5], iris[,5])
+m
+table(predict(m, iris), iris[,5])
