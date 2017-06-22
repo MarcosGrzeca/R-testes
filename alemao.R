@@ -2,18 +2,25 @@
 options(max.print = 99999999)
 
 #https://cran.r-project.org/web/packages/text2vec/vignettes/text-vectorization.html
-#Pr?-processar texto https://rpubs.com/MajstorMaestro/256588
+#Pre-processar texto https://rpubs.com/MajstorMaestro/256588
 
 #Carrega functions
 DIRETORIO = "C:\\Users\\Marcos\\Documents\\GitHub\\R-testes\\"
 source(file=paste(DIRETORIO,"functions.R", sep = ""))
 
-#Configura??es
+#Configuracoes
 DATABASE <- "alemao"
 clearConsole();
-dados <- query("SELECT id, texto, alc FROM conversa")
+dados <- query("SELECT id, texto, alc, repetitions, longpauses FROM conversa LIMIT 5000")
 dados$alc[dados$alc == "cna"] <- "na"
 dados$alc <- as.factor(dados$alc)
+
+dados$repetitions[dados$repetitions > 0] <- 1
+dados$repetitions[dados$repetitions == 0] <- 0
+
+dados$longpauses[dados$longpauses > 0] <- 1
+dados$longpauses[dados$longpauses == 0] <- 0
+
 
 clearConsole()
 
@@ -26,7 +33,8 @@ setkey(dados, id)
 prep_fun = tolower
 tok_fun = word_tokenizer
 
-stop_words = c("aber","als","am","an","auch","auf","aus","bei","bin","bis","bist","da","dadurch","daher","darum","das","da?","dass","dein","deine","dem","den","der","des","dessen","deshalb","die","dies","dieser","dieses","doch","dort","du","durch","ein","eine","einem","einen","einer","eines","er","es","euer","eure","f?r","hatte","hatten","hattest","hattet","hier","hinter","ich","ihr","ihre","im","in","ist","ja","jede","jedem","jeden","jeder","jedes","jener","jenes","jetzt","kann","kannst","k?nnen","k?nnt","machen","mein","meine","mit","mu?","mu?t","musst","m?ssen","m??t","nach","nachdem","nein","nicht","nun","oder","seid","sein","seine","sich","sie","sind","soll","sollen","sollst","sollt","sonst","soweit","sowie","und","unser","unsere","unter","vom","von","vor","wann","warum","was","weiter","weitere","wenn","wer","werde","werden","werdet","weshalb","wie","wieder","wieso","wir","wird","wirst","wo","woher","wohin","zu","zum","zur","?ber")
+stop_words = c("aber", "als", "am", "an", "auch", "auf", "aus", "bei", "bin", "bis", "bist", "da", "dadurch", "daher", "darum", "das", "daß", "dass", "dein", "deine", "dem", "den", "der", "des", "dessen", "deshalb", "die", "dies", "dieser", "dieses", "doch", "dort", "du", "durch", "ein", "eine", "einem", "einen", "einer", "eines", "er", "es", "euer", "eure", "für", "hatte", "hatten", "hattest", "hattet", "hier", "hinter", "ich", "ihr", "ihre", "im", "in", "ist", "ja", "jede", "jedem", "jeden", "jeder", "jedes", "jener", "jenes", "jetzt", "kann", "kannst", "können", "könnt", "machen", "mein", "meine", "mit", "muß", "mußt", "musst", "müssen", "müßt", "nach", "nachdem", "nein", "nicht", "nun", "oder", "seid", "sein", "seine", "sich", "sie", "sind", "soll", "sollen", "sollst", "sollt", "sonst", "soweit", "sowie", "und", "unser", "unsere", "unter", "vom", "von", "vor", "wann", "warum", "was", "weiter", "weitere", "wenn", "wer", "werde", "werden", "werdet", "weshalb", "wie", "wieder", "wieso", "wir", "wird", "wirst", "wo", "woher", "wohin", "zu", "zum", "zur", "über")
+
 
 it_train = itoken(dados$texto, 
                   preprocessor = prep_fun, 
@@ -37,8 +45,10 @@ it_train = itoken(dados$texto,
 vocab = create_vocabulary(it_train, stopwords = stop_words)
 vectorizer = vocab_vectorizer(vocab)
 dtm_train = create_dtm(it_train, vectorizer)
-col_headings <- c('id','texto','alc')
-names(dados) <- col_headings
+
+#col_headings <- c('id','texto','alc')
+#names(dados) <- col_headings
+
 vectorizer = vocab_vectorizer(vocab)
 dtm_train = create_dtm(it_train, vectorizer)
 
@@ -61,9 +71,18 @@ dataM[1:2,]
 
 #export(total, "dump_enem_total.arff")
 
-#Naive Bayes
+dataM[1,2:ncol(dataM)]
+
+library(caret)
+train_control <- trainControl(method="cv", number=10)
+fit <- train(
+  x = dataM[,2:ncol(dataM)], y = dataM$alc, method = "nb", 
+  trControl = trainControl(method = "cv", number = 10)) 
+fit
+
+  #Naive Bayes
 library(e1071)
-model <- naiveBayes(alc ~ ., data = dataM)
+model <- naiveBayes(alc ~ ., data = dataM, trControl=train_control)
 #model <- naiveBayes(dataM[2:ncol(dataM)], dataM[1:1])
 model
 
