@@ -11,7 +11,7 @@ source(file=paste(DIRETORIO,"functions.R", sep = ""))
 #Configuracoes
 DATABASE <- "alemao"
 clearConsole();
-dados <- query("SELECT id, texto, alc, repetitions, longpauses FROM conversa LIMIT 3000")
+dados <- query("SELECT id, texto, alc, repetitions, longpauses FROM conversa")
 dados$alc[dados$alc == "cna"] <- "na"
 dados$alc <- as.factor(dados$alc)
 
@@ -53,12 +53,24 @@ dataM <- as.data.frame(unclass(dataM))
 dataM <- subset(dataM, select = -c(texto, id) )
 
 library(caret)
+
+#Naive bayes
 fit <- train(
   x = dataM[,2:ncol(dataM)], y = dataM$alc, method = "nb", 
   trControl = trainControl(method = "cv", number = 10)) 
 fit
 
-#mod_fit <- train(Class ~ Age + ForeignWorker + Property.RealEstate + Housing.Own +  CreditHistory.Critical,  data=training, method="glm", family="binomial")
+#regressao logistica
+fitLG <- train(
+  x = dataM[,2:ncol(dataM)], y = dataM$alc, method="glm", family="binomial", 
+  trControl = trainControl(method = "cv", number = 10)) 
+
+svmfit <- train(
+  x = dataM[,2:ncol(dataM)], y = dataM$alc, method = "svmRadial", 
+  trControl = trainControl(method = "cv", number = 10)) 
+svmfit
+
+
 
 bh_pred <- predict(fit, dataM)
 bh_pred
@@ -75,3 +87,31 @@ uar
 
 #TP FP
 #FN TN
+
+
+
+#Comparando algoritmos
+# load the library
+library(mlbench)
+library(caret)
+# load the dataset
+data(PimaIndiansDiabetes)
+# prepare training scheme
+control <- trainControl(method="repeatedcv", number=10, repeats=3)
+# train the LVQ model
+set.seed(7)
+modelLvq <- train(diabetes~., data=PimaIndiansDiabetes, method="lvq", trControl=control)
+# train the GBM model
+set.seed(7)
+modelGbm <- train(diabetes~., data=PimaIndiansDiabetes, method="gbm", trControl=control, verbose=FALSE)
+# train the SVM model
+set.seed(7)
+modelSvm <- train(diabetes~., data=PimaIndiansDiabetes, method="svmRadial", trControl=control)
+# collect resamples
+results <- resamples(list(LVQ=modelLvq, GBM=modelGbm, SVM=modelSvm))
+# summarize the distributions
+summary(results)
+# boxplots of results
+bwplot(results)
+# dot plots of results
+dotplot(results)
