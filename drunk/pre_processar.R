@@ -46,11 +46,9 @@ vocab = create_vocabulary(it_train, stopwords = stop_words)
 vectorizer = vocab_vectorizer(vocab)
 dtm_train = create_dtm(it_train, vectorizer)
 
-
 vectorizer = vocab_vectorizer(vocab)
 dtm_train = create_dtm(it_train, vectorizer)
-#dataM <- as.data.frame(as.matrix(dtm_train))
-dataM <- as.matrix(dtm_train)
+dataM <- as.data.frame(as.matrix(dtm_train))
 
 convert_count <- function(x) {
   y <- ifelse(x > 0, 1,0)
@@ -58,84 +56,31 @@ convert_count <- function(x) {
   #y <- factor(y, levels=c(0,1), labels=c(0, 1))
   y
 }
-dataM <- apply(dataM, 2, convert_count)
+#teste com word count
+#dataM <- apply(dataM, 2, convert_count)
 
-cols <- colnames(dataM)
+#cols <- colnames(dataM)
 
 dadosFinal <- subset(dados, select = -c(texto, id) )
 
-#dump(dadosFinal, "dadosFinal.csv")
-#dump(dataM, "dadosM.csv")
-#dadosFinal <- read.csv(file="dadosM.csv", header=TRUE, sep=",")
+dump(dadosFinal, "count_dadosFinal.csv")
+dump(dataM, "count_dadosM.csv")
+dadosFinal <- read.csv(file="count_dadosM.csv", header=TRUE, sep=",")
 
-nrow(dataM)
-ncol(dataM)
+#FAZER NO BRAÇO
+#for(i in 1:nrow(dataM)) {
+#  for(j in 1:ncol(dataM)) {
+#    dadosFinal[i][[cols[j]]] <- dataM[i, j]
+#    dadosFinal[i, j] <- dataM[i, j]
+#  }
+#}
 
-dataM[1, 1]
-dadosFinal[1, get("alc")] <- 10
+#for(i in 1:ncol(dataM)) {
+#  dadosFinal[[cols[i]]] <- as.integer(dadosFinal[[cols[i]]])
+#}
 
-
-for(i in 1:nrow(dataM)) {
-  for(j in 1:ncol(dataM)) {
-    #dadosFinal[i][[cols[j]]] <- dataM[i, j]
-    dadosFinal[i, j] <- dataM[i, j]
-  }
-}
-
-for(i in 1:ncol(dataM)) {
-  dadosFinal[[cols[i]]] <- as.integer(dadosFinal[[cols[i]]])
-}
-
-#require(data.table)
-#dt.raw <- as.data.table(g.raw, keep.rownames=T)
-#Data <- as.matrix(Data)
-
-
-
-#save(dataM,file="alemao.Rda")
+save(dataM,file="alemao_count.Rda")
 #load("alemao.Rda")
-
-#dataM <- as.data.frame(unclass(dadosFinal))
-#dataM <- as.data.frame(dataM)
-#dataM$alc <- as.factor(dataM$alc)
-#dataM$repetitions <- as.factor(dataM$repetitions)
-#dataM$longpauses <- as.factor(dataM$longpauses)
-#dadosFinal <- as.data.frame(dadosFinal)
-
-
-#save(dadosFinal,file="alemao.Rda")
-#load("alemao.Rda")
-
 
 source(file_path_as_absolute("classificadores.R"))
-
-fit <- nv_train(dadosFinal)
-fit
-bh_pred <- predict(fit, dadosFinal)
-bh_pred
-
-precision <- posPredValue(bh_pred, dadosFinal$alc)
-paste("Precision", precision, sep=" ")
-recall <- sensitivity(bh_pred, dadosFinal$alc)
-paste("Recall", recall, sep=" ")
-F1 <- (2 * precision * recall) / (precision + recall)
-paste("F1", F1, sep=" ")
-
-dadosFinal$alc
-pred2 <- prediction(bh_pred, dadosFinal$alc);
-
-a <- table(bh_pred, dadosFinal$alc)
-a
-
-uarA <- a[1,1] / (a[1,1] + a[1,2])
-uarNA <- a[2,2] / (a[2,2] + a[2,1])
-if (uarNA == "NaN"){
-  uarNA = 0
-}
-uar = (uarA + uarNA) / 2
-uar
-
-
-#final <- classificar(dadosFinal)
-#final
-
+final <- classificar(dadosFinal)

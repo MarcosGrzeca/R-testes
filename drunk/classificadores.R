@@ -1,5 +1,10 @@
 library(caret)
 
+teste <- function() {
+  paste("Precision", "precision", sep=" ")
+  return (1)
+}
+
 #Naive bayes
 nv_train <- function(dadosP) {
   fit_nv <- train(x = dadosP[,2:ncol(dadosP)], 
@@ -35,14 +40,14 @@ classificar <- function(dadosP) {
   bh_pred <- predict(fit, dadosP)
   bh_pred
   
-  precision <- posPredValue(bh_pred, dadosFinal$alc)
-  paste("Precision", precision, sep=" ")
-  recall <- sensitivity(bh_pred, dadosFinal$alc)
-  paste("Recall", recall, sep=" ")
+  precision <- posPredValue(bh_pred, dadosP$alc)
+  print(paste("Precision", precision, sep=" "))
+  recall <- sensitivity(bh_pred, dadosP$alc)
+  print(paste("Recall", recall, sep=" "))
   F1 <- (2 * precision * recall) / (precision + recall)
-  paste("F1", F1, sep=" ")
+  print(paste("F1", F1, sep=" "))
   
-  a <- table(bh_pred, dataM$alc)
+  a <- table(bh_pred, dadosP$alc)
   
   uarA <- a[1,1] / (a[1,1] + a[1,2])
   uarNA <- a[2,2] / (a[2,2] + a[2,1])
