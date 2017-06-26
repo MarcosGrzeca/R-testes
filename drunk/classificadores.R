@@ -1,10 +1,5 @@
 library(caret)
 
-teste <- function() {
-  paste("Precision", "precision", sep=" ")
-  return (1)
-}
-
 #Naive bayes
 nv_train <- function(dadosP) {
   fit_nv <- train(x = dadosP[,2:ncol(dadosP)], 

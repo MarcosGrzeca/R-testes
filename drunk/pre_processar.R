@@ -43,8 +43,12 @@ it_train = itoken(dados$texto,
                   progressbar = TRUE)
 
 vocab = create_vocabulary(it_train, stopwords = stop_words)
-vectorizer = vocab_vectorizer(vocab)
-dtm_train = create_dtm(it_train, vectorizer)
+
+pruned_vocab = prune_vocabulary(vocab, 
+                                term_count_min = 10, 
+                                doc_proportion_max = 0.5,
+                                doc_proportion_min = 0.001)
+#vectorizer = vocab_vectorizer(pruned_vocab)
 
 vectorizer = vocab_vectorizer(vocab)
 dtm_train = create_dtm(it_train, vectorizer)
@@ -59,14 +63,13 @@ convert_count <- function(x) {
 #teste com word count
 #dataM <- apply(dataM, 2, convert_count)
 
-#cols <- colnames(dataM)
-
 dadosFinal <- subset(dados, select = -c(texto, id) )
 
 dump(dadosFinal, "count_dadosFinal.csv")
 dump(dataM, "count_dadosM.csv")
 dadosFinal <- read.csv(file="count_dadosM.csv", header=TRUE, sep=",")
 
+#cols <- colnames(dataM)
 #FAZER NO BRAÇO
 #for(i in 1:nrow(dataM)) {
 #  for(j in 1:ncol(dataM)) {
@@ -79,7 +82,7 @@ dadosFinal <- read.csv(file="count_dadosM.csv", header=TRUE, sep=",")
 #  dadosFinal[[cols[i]]] <- as.integer(dadosFinal[[cols[i]]])
 #}
 
-save(dataM,file="alemao_count.Rda")
+#save(dataM,file="alemao_count.Rda")
 #load("alemao.Rda")
 
 source(file_path_as_absolute("classificadores.R"))
