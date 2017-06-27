@@ -86,7 +86,7 @@ for(i in 1:ncol(dataM)) {
   dadosFinal[[cols[i]]] <- as.integer(dadosFinal[[cols[i]]])
 }
 
-#save(dataM, file="alemao_new.Rda")
+save(dadosFinal, file="alemao_bag_processado.Rda")
 #load("alemao.Rda")
 
 print("SVM")
