@@ -1,4 +1,5 @@
 #Carregar bibliotecas
+print("glm")
 options(max.print = 99999999)
 
 #https://cran.r-project.org/web/packages/text2vec/vignettes/text-vectorization.html
@@ -89,6 +90,6 @@ for(i in 1:ncol(dataM)) {
 save(dadosFinal, file="alemao_bag_processado.Rda")
 #load("alemao.Rda")
 
-print("SVM")
+print("glm")
 source(file_path_as_absolute("classificadores.R"))
 final <- classificar(dadosFinal)
