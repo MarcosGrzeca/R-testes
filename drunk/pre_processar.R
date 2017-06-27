@@ -47,7 +47,6 @@ it_train = itoken(dados$texto,
                   progressbar = TRUE)
 
 vocab = create_vocabulary(it_train, ngram = c(1L, 2L), stopwords = stop_words)
-vocab
 vocab = create_vocabulary(it_train, stopwords = stop_words)
 
 pruned_vocab = prune_vocabulary(vocab, 
@@ -87,7 +86,7 @@ for(i in 1:ncol(dataM)) {
   dadosFinal[[cols[i]]] <- as.integer(dadosFinal[[cols[i]]])
 }
 
-save(dataM, file="alemao_new.Rda")
+#save(dataM, file="alemao_new.Rda")
 #load("alemao.Rda")
 
 source(file_path_as_absolute("classificadores.R"))
