@@ -11,8 +11,8 @@ source(file_path_as_absolute("functions.R"))
 #Configuracoes
 DATABASE <- "alemao"
 clearConsole();
-dados <- query("(SELECT id, texto, alc, repetitions, longpauses FROM conversa WHERE alc = 'a' LIMIT 2000) UNION (SELECT id, texto, alc, repetitions, longpauses FROM conversa WHERE alc = 'na' LIMIT 2000)")
-
+#dados <- query("(SELECT id, texto, alc, repetitions, longpauses FROM conversa WHERE alc = 'a' LIMIT 2000) UNION (SELECT id, texto, alc, repetitions, longpauses FROM conversa WHERE alc = 'na' LIMIT 2000)")
+dados <- query("SELECT id, texto, alc, repetitions, longpauses FROM conversa")
 dados$alc[dados$alc == "cna"] <- "na"
 dados$alc <- as.factor(dados$alc)
 dados$texto <- gsub('"', 'aspas', dados$texto)
@@ -42,6 +42,8 @@ it_train = itoken(dados$texto,
                   ids = dados$id, 
                   progressbar = TRUE)
 
+vocab = create_vocabulary(it_train, ngram = c(1L, 2L), stopwords = stop_words)
+vocab
 vocab = create_vocabulary(it_train, stopwords = stop_words)
 
 pruned_vocab = prune_vocabulary(vocab, 
@@ -65,24 +67,23 @@ convert_count <- function(x) {
 
 dadosFinal <- subset(dados, select = -c(texto, id) )
 
-dump(dadosFinal, "count_dadosFinal.csv")
-dump(dataM, "count_dadosM.csv")
-dadosFinal <- read.csv(file="count_dadosM.csv", header=TRUE, sep=",")
+#dump(dadosFinal, "count_dadosFinal.csv")
+#dump(dataM, "count_dadosM.csv")
+#dadosFinal <- read.csv(file="count_dadosM.csv", header=TRUE, sep=",")
 
-#cols <- colnames(dataM)
+cols <- colnames(dataM)
 #FAZER NO BRAÇO
-#for(i in 1:nrow(dataM)) {
-#  for(j in 1:ncol(dataM)) {
-#    dadosFinal[i][[cols[j]]] <- dataM[i, j]
-#    dadosFinal[i, j] <- dataM[i, j]
-#  }
-#}
+for(i in 1:nrow(dataM)) {
+  for(j in 1:ncol(dataM)) {
+    dadosFinal[i][[cols[j]]] <- dataM[i, j]
+  }
+}
 
-#for(i in 1:ncol(dataM)) {
-#  dadosFinal[[cols[i]]] <- as.integer(dadosFinal[[cols[i]]])
-#}
+for(i in 1:ncol(dataM)) {
+  dadosFinal[[cols[i]]] <- as.integer(dadosFinal[[cols[i]]])
+}
 
-#save(dataM,file="alemao_count.Rda")
+save(dataM, file="alemao_new.Rda")
 #load("alemao.Rda")
 
 source(file_path_as_absolute("classificadores.R"))
