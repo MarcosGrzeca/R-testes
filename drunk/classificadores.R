@@ -30,7 +30,8 @@ glm_train <- function(dadosP) {
 }
 
 classificar <- function(dadosP) {
-  fit <- nv_train(dadosP)
+  #fit <- nv_train(dadosP)
+  fit <- svm_train(dadosP)
   fit
   bh_pred <- predict(fit, dadosP)
   bh_pred

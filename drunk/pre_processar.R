@@ -89,5 +89,6 @@ for(i in 1:ncol(dataM)) {
 #save(dataM, file="alemao_new.Rda")
 #load("alemao.Rda")
 
+print("SVM")
 source(file_path_as_absolute("classificadores.R"))
 final <- classificar(dadosFinal)
