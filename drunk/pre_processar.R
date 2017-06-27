@@ -12,10 +12,14 @@ source(file_path_as_absolute("functions.R"))
 DATABASE <- "alemao"
 clearConsole();
 #dados <- query("(SELECT id, texto, alc, repetitions, longpauses FROM conversa WHERE alc = 'a' LIMIT 2000) UNION (SELECT id, texto, alc, repetitions, longpauses FROM conversa WHERE alc = 'na' LIMIT 2000)")
-dados <- query("SELECT id, texto, alc, repetitions, longpauses FROM conversa")
-dados$alc[dados$alc == "cna"] <- "na"
-dados$alc <- as.factor(dados$alc)
-dados$texto <- gsub('"', 'aspas', dados$texto)
+
+#dados <- query("SELECT id, texto, alc, repetitions, longpauses FROM conversa")
+#dados$alc[dados$alc == "cna"] <- "na"
+#dados$alc <- as.factor(dados$alc)
+#dados$texto <- gsub('"', 'aspas', dados$texto)
+
+#save(dados, file="database.Rda")
+load("database.Rda")
 
 dados$repetitions[dados$repetitions > 0] <- 1
 dados$repetitions[dados$repetitions == 0] <- 0
