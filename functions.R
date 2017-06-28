@@ -20,7 +20,7 @@ finishFileLog <- function(nome){
 
 query <- function(sql) {
   dbDataType(RMySQL::MySQL(), "a")
-  mydb = dbConnect(MySQL(), user='root', password='alemao10', dbname=DATABASE, host='alemao.ckfgeb2fkvqp.sa-east-1.rds.amazonaws.com')
+  mydb = dbConnect(MySQL(), user='root', password='', dbname=DATABASE, host='localhost')
   rs = dbSendQuery(mydb, sql);
   dataBD <- fetch(rs, n=-1)
   #dataBD <- fetch(rs, getNumRows(mydb, "WAVELENGTH"))

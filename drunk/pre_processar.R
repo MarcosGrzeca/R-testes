@@ -47,13 +47,13 @@ it_train = itoken(dados$texto,
                   ids = dados$id, 
                   progressbar = TRUE)
 
-vocab = create_vocabulary(it_train, ngram = c(1L, 2L), stopwords = stop_words)
+#vocab = create_vocabulary(it_train, ngram = c(1L, 2L), stopwords = stop_words)
 vocab = create_vocabulary(it_train, stopwords = stop_words)
 
-pruned_vocab = prune_vocabulary(vocab, 
-                                term_count_min = 10, 
-                                doc_proportion_max = 0.5,
-                                doc_proportion_min = 0.001)
+#pruned_vocab = prune_vocabulary(vocab, 
+#                                term_count_min = 10, 
+#                                doc_proportion_max = 0.5,
+#                                doc_proportion_min = 0.001)
 #vectorizer = vocab_vectorizer(pruned_vocab)
 
 vectorizer = vocab_vectorizer(vocab)
@@ -71,25 +71,27 @@ convert_count <- function(x) {
 
 dadosFinal <- subset(dados, select = -c(texto, id) )
 
-#dump(dadosFinal, "count_dadosFinal.csv")
-#dump(dataM, "count_dadosM.csv")
-#dadosFinal <- read.csv(file="count_dadosM.csv", header=TRUE, sep=",")
+#dump(dadosFinal, "exp1_alc.csv")
+dump(dataM, "exp1_bag.csv")
+dadosFinal <- read.csv(file="base_completa/exp1_bag.csv", header=TRUE, sep=",")
+save(dadosFinal, file="alemao_base_completa.Rda")
 
-cols <- colnames(dataM)
+#EXTREMAMENTE LENTO
+#cols <- colnames(dataM)
 #FAZER NO BRAÇO
-for(i in 1:nrow(dataM)) {
-  for(j in 1:ncol(dataM)) {
-    dadosFinal[i][[cols[j]]] <- dataM[i, j]
-  }
-}
+#for(i in 1:nrow(dataM)) {
+#  for(j in 1:ncol(dataM)) {
+#    dadosFinal[i][[cols[j]]] <- dataM[i, j]
+#  }
+#}
 
-for(i in 1:ncol(dataM)) {
-  dadosFinal[[cols[i]]] <- as.integer(dadosFinal[[cols[i]]])
-}
+#for(i in 1:ncol(dataM)) {
+  #dadosFinal[[cols[i]]] <- as.integer(dadosFinal[[cols[i]]])
+#}
 
-save(dadosFinal, file="alemao_bag_processado.Rda")
+#save(dadosFinal, file="alemao_bag_processado.Rda")
 #load("alemao.Rda")
 
-print("glm")
+print("SVM")
 source(file_path_as_absolute("classificadores.R"))
 final <- classificar(dadosFinal)
