@@ -40,3 +40,6 @@ uar
 
 #TP FP
 #FN TN
+
+
+save.image(file="svm.RData")
