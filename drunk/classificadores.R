@@ -31,11 +31,15 @@ glm_train <- function(dadosP) {
 
 classificar <- function(dadosP) {
   #fit <- nv_train(dadosP)
-  fit <- svm_train(dadosP)
-  save(fit, file="fit_svm.Rda")
-  #fit <- glm_train(dadosP)
+  #fit <- svm_train(dadosP)
+  #save(fit, file="fit_svm.Rda")
+  fit <- glm_train(dadosP)
+  save(fit, file="fit_glm_train.Rda")
+  
   bh_pred <- predict(fit, dadosP)
-  save(bh_pred, file="bh_pred_svm.Rda")
+  #save(bh_pred, file="bh_pred_svm.Rda")
+  save(bh_pred, file="bh_pred_glm.Rda")
+  
   precision <- posPredValue(bh_pred, dadosP$alc)
   print(paste("Precision", precision, sep=" "))
   recall <- sensitivity(bh_pred, dadosP$alc)
