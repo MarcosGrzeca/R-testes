@@ -1,12 +1,11 @@
 library(caret)
 
-if (!require("doParallel")) {
-  install.packages("doParallel")
+if (!require("doMC")) {
+  install.packages("doMC")
 }
-library(doParallel)
+library(doMC)
 
-cl<-makeCluster(3)
-registerDoParallel(cl)
+registerDoMC(4)
 
 print("Treinando")
 fit <- trainAlgoritmo(dadosFinal)
@@ -37,4 +36,4 @@ uar = (uarA + uarNA) / 2
 uar
 
 save.image(file=PATH_IMAGE)
-stopCluster(cl)
+#stopCluster(cl)
