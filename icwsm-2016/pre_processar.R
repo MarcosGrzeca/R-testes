@@ -12,7 +12,7 @@ source(file_path_as_absolute("functions.R"))
 DATABASE <- "icwsm-2016"
 clearConsole();
 dadosQ1 <- query("SELECT id, q1 as resposta, textParser, hashtags, emoticonPos, emoticonNeg FROM tweets WHERE situacao = 'S'")
-dadosQ2 <- query("SELECT id, q2 as resposta, textParser, hashtags, emoticonPos, emoticonNeg FROM tweets WHERE situacao = 'S' AND q1 = '1'")
+dadosQ2 <- query("SELECT id, q2 as resposta, textParser, hashtags, emoticonPos, emoticonNeg FROM tweets WHERE situacao = 'S' AND q1 = '1' AND q2 IS NOT NULL")
 #dadosQ3 <- query("SELECT id, q3 as resposta, textParser, hashtags, emoticonPos, emoticonNeg FROM tweets WHERE situacao = 'S' AND q2 = '1'")
 
 dados <- dadosQ1
@@ -131,16 +131,15 @@ predicao
 save(predicao, file="resultados/pred.Rda")
 #load("resultados/pred.Rda")
 
-
 print("Resultados")
-
-
+summary(testing$resposta)
 a <- table(predicao, testing$resposta)
 a
-aa <- t(a)
-precisao <- aa[1,1]  / (aa[1,1] + aa[2,1])
+
+precisao <- a[2,2]  / (a[2,2] + a[1,2])
 print(paste("Precision", precisao, sep=" "))
-revocacao <- aa[1,1] / (aa[1,1] + aa[1,2])
+
+revocacao <- a[2,2] / (a[2,2] + a[2,1])
 print(paste("Revocação", revocacao, sep=" "))
 
 f1 <- (2*precisao*revocacao)/(precisao+revocacao)

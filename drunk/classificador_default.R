@@ -35,5 +35,17 @@ if (uarNA == "NaN"){
 uar = (uarA + uarNA) / 2
 uar
 
+
+print("Resultados MARCOS")
+precisao <- a[2,2]  / (a[2,2] + a[1,2])
+print(paste("Precision", precisao, sep=" "))
+
+revocacao <- a[2,2] / (a[2,2] + a[2,1])
+print(paste("Revocação", revocacao, sep=" "))
+
+f1 <- (2*precisao*revocacao)/(precisao+revocacao)
+print(paste("F1", f1, sep=" "))
+save.image(file="resultados/image_q2.RData")
+
 save.image(file=PATH_IMAGE)
 #stopCluster(cl)
