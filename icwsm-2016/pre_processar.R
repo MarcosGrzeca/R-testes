@@ -23,7 +23,6 @@ dados$emoticonNeg[dados$emoticonNeg > 0] <- 1
 dados$emoticonNeg[dados$emoticonNeg == 0] <- 0
 clearConsole()
 
-  
 if (!require("text2vec")) {
   install.packages("text2vec")
 }
@@ -42,22 +41,27 @@ it_train = itoken(dados$textParser,
                   ids = dados$id, 
                   progressbar = TRUE)
 
-#vocab = create_vocabulary(it_train, ngram = c(3L, 3L))
-vocab = create_vocabulary(it_train, ngram = c(2L, 3L))
+vocab = create_vocabulary(it_train, ngram = c(3L, 3L))
 vectorizer = vocab_vectorizer(vocab)
-dtm_train = create_dtm(it_train, vectorizer)
+dtm_train_texto = create_dtm(it_train, vectorizer)
 
-ncol(dtm_train)
-nrow(dtm_train)
+it_train = itoken(dados$hashtags, 
+                  preprocessor = prep_fun, 
+                  tokenizer = tok_fun, 
+                  ids = dados$id, 
+                  progressbar = TRUE)
 
-data <- as.matrix(dtm_train)
-dataFrame <- as.data.frame(as.matrix(dtm_train))
+vocabHashTags = create_vocabulary(it_train)
+vectorizerHashTags = vocab_vectorizer(vocabHashTags)
+dtm_train_hash_tags = create_dtm(it_train, vectorizerHashTags)
 
-save.image(file="apenasDados.RData")
+dataTexto <- as.matrix(dtm_train_texto)
+dataFrameTexto <- as.data.frame(as.matrix(dtm_train_texto))
 
-#EXTREMAMENTE LENTO
-cols <- colnames(data)
-aspectos <- sort(colSums(data), decreasing = TRUE)
+dataFrameHashTag <- as.data.frame(as.matrix(dtm_train_hash_tags))
+
+cols <- colnames(dataTexto)
+aspectos <- sort(colSums(dataTexto), decreasing = TRUE)
 manter <- round(length(aspectos) * 0.25)
 aspectosManter <- c()
 aspectosRemover <- c()
@@ -69,7 +73,7 @@ for(i in 1:length(aspectos)) {
     aspectosRemover <- c(aspectosRemover, aspectos[i])
   }
 }
-dataFrame <- dataFrame[names(aspectosManter)]
+dataFrameTexto <- dataFrameTexto[names(aspectosManter)]
 clearConsole()
 
 if (!require("doMC")) {
@@ -79,9 +83,15 @@ library(doMC)
 
 registerDoMC(CORES)
 
-
 if (!require("rowr")) {
   install.packages("rowr")
 }
 library(rowr)
-maFinal <- cbind.fill(dados, dataFrame)
+
+maFinal <- cbind.fill(dados, dataFrameTexto)
+maFinal <- cbind.fill(maFinal, dataFrameHashTag)
+maFinal <- subset(maFinal, select = -c(textParser, id, hashtags) )
+
+#id, q1, q2, q3, textParser, hashtags
+
+save(maFinal, file="icwsm-2016.Rda")
