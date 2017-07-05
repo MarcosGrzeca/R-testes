@@ -2,7 +2,7 @@
 options(max.print = 99999999)
 
 #Constantes
-CORES <- 2
+CORES <- 4
 
 #Carrega functions
 library(tools)
@@ -42,7 +42,8 @@ it_train = itoken(dados$textParser,
                   ids = dados$id, 
                   progressbar = TRUE)
 
-vocab = create_vocabulary(it_train, ngram = c(3L, 3L))
+#vocab = create_vocabulary(it_train, ngram = c(3L, 3L))
+vocab = create_vocabulary(it_train, ngram = c(2L, 3L))
 vectorizer = vocab_vectorizer(vocab)
 dtm_train = create_dtm(it_train, vectorizer)
 
@@ -69,8 +70,6 @@ for(i in 1:length(aspectos)) {
   }
 }
 dataFrame <- dataFrame[names(aspectosManter)]
-
-dataFrame <- subset(dataFrame, select = -c(names(aspectos)) )
 clearConsole()
 
 if (!require("doMC")) {
@@ -80,50 +79,9 @@ library(doMC)
 
 registerDoMC(CORES)
 
-  
-foreach(df = iter(dados, by='row'), .combine=rbind) %dopar% {
-    print(df[i,1])
-    #df[i,1] <- i
-    #df[i,,drop=FALSE]
+
+if (!require("rowr")) {
+  install.packages("rowr")
 }
-
-
-cols <- colnames(dataFrame)
-#FAZER NO BRAÇO
-for(i in 1:nrow(dataFrame)) {
-  for(j in 1:ncol(dataM)) {
-    dadosFinal[i][[cols[j]]] <- dataM[i, j]
-  }
-}
-
-
-stopCluster(cl)
-
-#FAZER NO BRAÇO
-#for(i in 1:nrow(dataM)) {
-#  for(j in 1:ncol(dataM)) {
-#    dadosFinal[i][[cols[j]]] <- dataM[i, j]
-#  }
-#}
-
-#save(dadosFinal, file="alemao_bag_processado.Rda")
-#load("alemao.Rda")
-
-print("SVM")
-source(file_path_as_absolute("classificadores.R"))
-final <- classificar(dadosFinal)
-
-
-if (!require("quanteda")) {
-  install.packages("quanteda")
-}
-library(quanteda)
-
-if (!require("qdap")) {
-  install.packages("qdap")
-}
-library(qdap)
-frequent_terms <- freq_terms(dados$textParser,20)
-vocab
-frequent_terms <- freq_terms(vocab, 3)
-frequent_terms
+library(rowr)
+maFinal <- cbind.fill(dados, dataFrame)
