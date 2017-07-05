@@ -11,11 +11,12 @@ source(file_path_as_absolute("functions.R"))
 #Configuracoes
 DATABASE <- "icwsm-2016"
 clearConsole();
-dados <- query("SELECT id, q1, q2, q3, textParser, hashtags, emoticonPos, emoticonNeg FROM tweets WHERE situacao = 'S'")
+dadosQ1 <- query("SELECT id, q1 as resposta, textParser, hashtags, emoticonPos, emoticonNeg FROM tweets WHERE situacao = 'S'")
+#dadosQ2 <- query("SELECT id, q2 as resposta, hashtags, emoticonPos, emoticonNeg FROM tweets WHERE situacao = 'S' AND q1 = '1'")
+#dadosQ3 <- query("SELECT id, q3 as resposta, hashtags, emoticonPos, emoticonNeg FROM tweets WHERE situacao = 'S' AND q2 = '1'")
 
-dados$q1 <- as.factor(dados$q1)
-dados$q2 <- as.factor(dados$q2)
-dados$q3 <- as.factor(dados$q3)
+dados <- dadosQ1
+dados$resposta <- as.factor(dados$resposta)
 
 dados$emoticonPos[dados$emoticonPos > 0] <- 1
 dados$emoticonPos[dados$emoticonPos == 0] <- 0
@@ -73,7 +74,7 @@ for(i in 1:length(aspectos)) {
     aspectosRemover <- c(aspectosRemover, aspectos[i])
   }
 }
-dataFrameTexto <- dataFrameTexto[names(aspectosManter)]
+#dataFrameTexto <- dataFrameTexto[names(aspectosManter)]
 clearConsole()
 
 if (!require("doMC")) {
@@ -93,5 +94,60 @@ maFinal <- cbind.fill(maFinal, dataFrameHashTag)
 maFinal <- subset(maFinal, select = -c(textParser, id, hashtags) )
 
 #id, q1, q2, q3, textParser, hashtags
-
 save(maFinal, file="icwsm-2016.Rda")
+
+library(tools)
+library(caret)
+
+set.seed(7)
+inTrain <- createDataPartition(y = maFinal$resposta, p = .80, list = FALSE)
+training <- maFinal[ inTrain,]
+testing <- maFinal[-inTrain,]
+
+library(caret)
+
+if (!require("doMC")) {
+  install.packages("doMC")
+}
+library(doMC)
+
+registerDoMC(4)
+
+print("Treinando")
+fit <- train(x = subset(training, select = -c(resposta)), 
+                y = training$resposta, 
+                method = "svmRadial", 
+                trControl = trainControl(method = "cv", number = 5)
+) 
+
+fit
+save(fit, file="resultados/fit.Rda")
+#load("resultados/fit.Rda")
+
+print("Prevendo")
+
+predicao <- predict(fit, subset(testing, select = -c(resposta)))
+save(predicao, file="resultados/pred.Rda")
+#load("resultados/pred.Rda")
+
+print("Resultados")
+
+precision <- posPredValue(predicao, testing$resposta)
+print(paste("Precision", precision, sep=" "))
+recall <- sensitivity(predicao, testing$resposta)
+print(paste("Recall", recall, sep=" "))
+F1 <- (2 * precision * recall) / (precision + recall)
+print(paste("F1", F1, sep=" "))
+
+a <- table(predicao, testing$resposta)
+save.image(file="resultados/image.RData")
+
+results <- resamples(list(SVM=fit))
+# collect resamples
+#results <- resamples(list(LVQ=modelLvq, GBM=modelGbm, SVM=modelSvm))
+# summarize the distributions
+#summary(results)
+# boxplots of results
+#bwplot(results)
+# dot plots of results
+#dotplot(results)
