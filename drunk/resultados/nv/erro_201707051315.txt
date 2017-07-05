@@ -1,0 +1,31 @@
+Loading required package: lattice
+Loading required package: ggplot2
+Loading required package: doMC
+Loading required package: foreach
+Loading required package: iterators
+Loading required package: parallel
+Loading required package: klaR
+Loading required package: MASS
+
+
+
+Warning messages:
+1: In eval(expr, envir, enclos) :
+  model fit failed for Fold02: usekernel=FALSE, fL=0, adjust=1 Error in NaiveBayes.default(x, y, usekernel = FALSE, fL = param$fL, ...) : 
+  Zero variances for at least one class in variables: daspasad, feldern, graues, zaspasahneputzt, wildbach, eiz, kurzhaarschnitt, flughafenkontrollen, ruf, hervorragenden, schwerter, schrecklichen, untergekommen, betonblock, touristenhochburgen, landesinners, aufhalt, mittelmeerraum, herauf, handflaspasache, geschlussfolgert, baspasamost, todes, losgezogen, whitsunday, helles, tourist, luftig, verraspasat, runtergelaufen, zahnradbahn, angesichts, ju, bil, erlebnissen, geba, valentinstag, familienmutter, abgeschlafft, rotterdam, holland, maastricht, hermengedildis, scheunentaspasur, weggekommen, versichert, abgestellt, markusplatz, unplugged, auaspassl, irgenden, abgewandtem, haspasatts, autofaspasahre, kompletten, bodensee, langkawi, malaysische, portugiesen, malakka, bunter, auskenne, angeschaltet, fahrstrecke, mittelita, reiseteilnehmern, skischuhen [... truncated]
+2: In eval(expr, envir, enclos) :
+  model fit failed for Fold04: usekernel=FALSE, fL=0, adjust=1 Error in NaiveBayes.default(x, y, usekernel = FALSE, fL = param$fL, ...) : 
+  Zero variances for at least one class in variables: daspasad, feldern, graues, zaspasahneputzt, wildbach, eiz, kurzhaarschnitt, flughafenkontrollen, ruf, hervorragenden, schwerter, schrecklichen, untergekommen, betonblock, touristenhochburgen, landesinners, aufhalt, mittelmeerraum, herauf, handflaspasache, geschlussfolgert, baspasamost, todes, losgezogen, whitsunday, helles, tourist, luftig, verraspasat, runtergelaufen, zahnradbahn, angesichts, ju, bil, erlebnissen, geba, valentinstag, familienmutter, abgeschlafft, rotterdam, holland, maastricht, hermengedildis, scheunentaspasur, weggekommen, versichert, abgestellt, markusplatz, unplugged, auaspassl, irgenden, abgewandtem, haspasatts, autofaspasahre, kompletten, bodensee, langkawi, malaysische, portugiesen, malakka, bunter, auskenne, angeschaltet, fahrstrecke, mittelita, reiseteilnehmern, skischuhen [... truncated]
+
+Warning messages:
+1: In eval(expr, envir, enclos) :
+  model fit failed for Fold01: usekernel=FALSE, fL=0, adjust=1 Error in NaiveBayes.default(x, y, usekernel = FALSE, fL = param$fL, ...) : 
+  Zero variances for at least one class in variables: daspasad, feldern, graues, zaspasahneputzt, wildbach, eiz, kurzhaarschnitt, flughafenkontrollen, ruf, hervorragenden, schwerter, schrecklichen, untergekommen, betonblock, touristenhochburgen, landesinners, aufhalt, mittelmeerraum, herauf, handflaspasache, geschlussfolgert, baspasamost, todes, losgezogen, whitsunday, helles, tourist, luftig, verraspasat, runtergelaufen, zahnradbahn, angesichts, ju, bil, erlebnissen, geba, valentinstag, familienmutter, abgeschlafft, rotterdam, holland, maastricht, hermengedildis, scheunentaspasur, weggekommen, versichert, abgestellt, markusplatz, unplugged, auaspassl, irgenden, abgewandtem, haspasatts, autofaspasahre, kompletten, bodensee, langkawi, malaysische, portugiesen, malakka, bunter, auskenne, angeschaltet, fahrstrecke, mittelita, reiseteilnehmern, skischuhen [... truncated]
+2: In eval(expr, envir, enclos) :
+  model fit failed for Fold03: usekernel=FALSE, fL=0, adjust=1 Error in NaiveBayes.default(x, y, usekernel = FALSE, fL = param$fL, ...) : 
+  Zero variances for at least one class in variables: daspasad, feldern, graues, zaspasahneputzt, wildbach, eiz, kurzhaarschnitt, flughafenkontrollen, ruf, hervorragenden, schwerter, schrecklichen, untergekommen, betonblock, touristenhochburgen, landesinners, aufhalt, mittelmeerraum, herauf, handflaspasache, geschlussfolgert, baspasamost, todes, losgezogen, whitsunday, helles, tourist, luftig, verraspasat, runtergelaufen, zahnradbahn, angesichts, ju, bil, erlebnissen, geba, valentinstag, familienmutter, abgeschlafft, rotterdam, holland, maastricht, hermengedildis, scheunentaspasur, weggekommen, versichert, abgestellt, markusplatz, unplugged, auaspassl, irgenden, abgewandtem, haspasatts, autofaspasahre, kompletten, bodensee, langkawi, malaysische, portugiesen, malakka, bunter, auskenne, angeschaltet, fahrstrecke, mittelita, reiseteilnehmern, skischuhen [... truncated]
+
+Warning message:
+In mclapply(argsList, FUN, mc.preschedule = preschedule, mc.set.seed = set.seed,  :
+  all scheduled cores encountered errors in user code
+Execution halted

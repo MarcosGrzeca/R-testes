@@ -1,0 +1,7 @@
+[1] "SVM"
+[1] "Treinando"
+[1] "Prevendo"
+[1] "Resultados"
+[1] "Precision NA"
+[1] "Recall NA"
+[1] "F1 NA"
