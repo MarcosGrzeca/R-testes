@@ -1,2 +1,0 @@
-[1] "Naive Bayes"
-[1] "Treinando"
