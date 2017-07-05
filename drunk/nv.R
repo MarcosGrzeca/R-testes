@@ -1,7 +1,7 @@
 library(tools)
-PATH_FIT <- "rda/nv/fit.Rda"
-PATH_PRED <- "rda/nv/bh_pred.Rda"
-PATH_IMAGE <- "rda/nv/nv.RData"
+PATH_FIT <- "resultados/nv/fit.Rda"
+PATH_PRED <- "resultados/nv/bh_pred.Rda"
+PATH_IMAGE <- "resultados/nv/nv.RData"
 
 load("rda/alemao_base_completa.Rda")
 
