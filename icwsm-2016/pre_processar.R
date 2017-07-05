@@ -13,9 +13,9 @@ DATABASE <- "icwsm-2016"
 clearConsole();
 dadosQ1 <- query("SELECT id, q1 as resposta, textParser, hashtags, emoticonPos, emoticonNeg FROM tweets WHERE situacao = 'S'")
 dadosQ2 <- query("SELECT id, q2 as resposta, textParser, hashtags, emoticonPos, emoticonNeg FROM tweets WHERE situacao = 'S' AND q1 = '1' AND q2 IS NOT NULL")
-#dadosQ3 <- query("SELECT id, q3 as resposta, textParser, hashtags, emoticonPos, emoticonNeg FROM tweets WHERE situacao = 'S' AND q2 = '1'")
+dadosQ3 <- query("SELECT id, q3 as resposta, textParser, hashtags, emoticonPos, emoticonNeg FROM tweets WHERE situacao = 'S' AND q2 = '1' AND q3 IS NOT NULL")
 
-dados <- dadosQ1
+dados <- dadosQ3
 dados$resposta[is.na(dados$resposta)] <- 0
 dados$resposta <- as.factor(dados$resposta)
 dados$emoticonPos[dados$emoticonPos > 0] <- 1
@@ -144,7 +144,7 @@ print(paste("Revocação", revocacao, sep=" "))
 
 f1 <- (2*precisao*revocacao)/(precisao+revocacao)
 print(paste("F1", f1, sep=" "))
-save.image(file="resultados/image_q2.RData")
+save.image(file="resultados/image_q3.RData")
 
 #results <- resamples(list(SVM=fit))
 # collect resamples
