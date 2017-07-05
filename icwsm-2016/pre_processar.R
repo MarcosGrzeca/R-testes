@@ -1,6 +1,9 @@
 #Carregar bibliotecas
 options(max.print = 99999999)
 
+#Constantes
+CORES <- 2
+
 #Carrega functions
 library(tools)
 source(file_path_as_absolute("functions.R"))
@@ -18,7 +21,7 @@ dados$emoticonPos[dados$emoticonPos > 0] <- 1
 dados$emoticonPos[dados$emoticonPos == 0] <- 0
 dados$emoticonNeg[dados$emoticonNeg > 0] <- 1
 dados$emoticonNeg[dados$emoticonNeg == 0] <- 0
-  clearConsole()
+clearConsole()
 
   
 if (!require("text2vec")) {
@@ -45,22 +48,14 @@ dtm_train = create_dtm(it_train, vectorizer)
 
 ncol(dtm_train)
 nrow(dtm_train)
-dtm_train
 
 data <- as.matrix(dtm_train)
 dataFrame <- as.data.frame(as.matrix(dtm_train))
-view(data)
+
+save.image(file="apenasDados.RData")
 
 #EXTREMAMENTE LENTO
 cols <- colnames(data)
-#FAZER NO BRAÇO
-#for(i in 1:nrow(dataM)) {
-#  for(j in 1:ncol(dataM)) {
-#    dadosFinal[i][[cols[j]]] <- dataM[i, j]
-#  }
-#}
-
-
 aspectos <- sort(colSums(data), decreasing = TRUE)
 manter <- round(length(aspectos) * 0.25)
 aspectosManter <- c()
@@ -73,7 +68,43 @@ for(i in 1:length(aspectos)) {
     aspectosRemover <- c(aspectosRemover, aspectos[i])
   }
 }
-aspectosManter
+dataFrame <- dataFrame[names(aspectosManter)]
+
+dataFrame <- subset(dataFrame, select = -c(names(aspectos)) )
+clearConsole()
+
+if (!require("doMC")) {
+  install.packages("doMC")
+}
+library(doMC)
+
+registerDoMC(CORES)
+
+  
+foreach(df = iter(dados, by='row'), .combine=rbind) %dopar% {
+    print(df[i,1])
+    #df[i,1] <- i
+    #df[i,,drop=FALSE]
+}
+
+
+cols <- colnames(dataFrame)
+#FAZER NO BRAÇO
+for(i in 1:nrow(dataFrame)) {
+  for(j in 1:ncol(dataM)) {
+    dadosFinal[i][[cols[j]]] <- dataM[i, j]
+  }
+}
+
+
+stopCluster(cl)
+
+#FAZER NO BRAÇO
+#for(i in 1:nrow(dataM)) {
+#  for(j in 1:ncol(dataM)) {
+#    dadosFinal[i][[cols[j]]] <- dataM[i, j]
+#  }
+#}
 
 #save(dadosFinal, file="alemao_bag_processado.Rda")
 #load("alemao.Rda")
