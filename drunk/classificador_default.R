@@ -5,7 +5,7 @@ if (!require("doMC")) {
 }
 library(doMC)
 
-registerDoMC(4)
+registerDoMC(cores = 4)
 
 print("Treinando")
 fit <- trainAlgoritmo(dadosFinal)
