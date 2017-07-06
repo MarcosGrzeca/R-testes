@@ -19,10 +19,12 @@ trainAlgoritmo <- function(dadosP) {
   return (fit_nv)
 }
 
+
+
 source(file_path_as_absolute("classificador_default.R"))
 
-#load(PATH_FIT)
-#load(PATH_PRED)
+load(PATH_FIT)
+#importantes(fit)
 
 teste <- function() {
   print("Resultados")
