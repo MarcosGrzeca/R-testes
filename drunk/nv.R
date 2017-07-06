@@ -19,7 +19,10 @@ trainAlgoritmo <- function(dadosP) {
 }
 
 
-source(file_path_as_absolute("classificador_default.R"))
+#source(file_path_as_absolute("classificador_default.R"))
+source(file_path_as_absolute("aspectos.R"))
+load(PATH_FIT)
+importantes(fit)
 
 teste <- function() {
 
