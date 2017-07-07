@@ -10,8 +10,8 @@ print("GLM")
 library(caret)
 
 trainAlgoritmo <- function(dadosP) {
-  fit_nv <- train(x = dadosP[,2:ncol(dadosP)], 
-                  y = dadosP$alc, 
+  fit_nv <- train(x = subset(dadosP, select = -c(alc)),
+                  y = dadosP$alc,
                   method = "glm", 
                   family="binomial",
                   trControl = trainControl(method = "cv", number = 10)
