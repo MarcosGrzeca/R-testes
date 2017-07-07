@@ -1,11 +1,18 @@
+if (!require("doParallel")) {
+  install.packages("doParallel")
+}
+library(doParallel); 
+cl <- makeCluster(8); 
+registerDoParallel(cl);
+
 library(caret)
 
-if (!require("doMC")) {
-  install.packages("doMC")
-}
-library(doMC)
+#if (!require("doMC")) {
+#  install.packages("doMC")
+#}
+#library(doMC)
 
-registerDoMC(cores = detectCores())
+#registerDoMC(cores = detectCores())
 
 print("Treinando")
 fit <- trainAlgoritmo(dadosFinal)
@@ -26,4 +33,6 @@ if (uarNA == "NaN"){
 }
 uar = (uarA + uarNA) / 2
 uar
+
+stopCluster(cl);
 save.image(file=PATH_IMAGE)
