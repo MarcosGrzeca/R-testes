@@ -1,0 +1,9 @@
+[1] "SVM"
+[1] "Treinando"
+[1] "Treinei"
+[1] "Prevendo"
+[1] "Resultados"
+       
+bh_pred a na
+     a  0  0
+     na 0  0

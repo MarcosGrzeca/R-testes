@@ -1,0 +1,17 @@
+Loading required package: lattice
+Loading required package: ggplot2
+Loading required package: doParallel
+Loading required package: foreach
+Loading required package: iterators
+Loading required package: parallel
+Loading required package: kernlab
+
+Attaching package: ‘kernlab’
+
+The following object is masked from ‘package:ggplot2’:
+
+    alpha
+
+Warning message:
+In method$predict(modelFit = modelFit, newdata = newdata, submodels = param) :
+  kernlab class prediction calculations failed; returning NAs
