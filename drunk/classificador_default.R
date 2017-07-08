@@ -2,7 +2,7 @@ if (!require("doParallel")) {
   install.packages("doParallel")
 }
 library(doParallel); 
-cl <- makeCluster(8); 
+cl <- makeCluster(16); 
 registerDoParallel(cl);
 
 library(caret)
@@ -16,6 +16,7 @@ library(caret)
 
 print("Treinando")
 fit <- trainAlgoritmo(dadosFinal)
+print("Treinei")
 save(fit, file=PATH_FIT)
 
 print("Prevendo")
