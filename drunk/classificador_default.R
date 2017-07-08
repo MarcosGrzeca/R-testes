@@ -2,7 +2,7 @@ if (!require("doParallel")) {
   install.packages("doParallel")
 }
 library(doParallel); 
-cl <- makeCluster(12); 
+cl <- makeCluster(8); 
 registerDoParallel(cl);
 
 library(caret)

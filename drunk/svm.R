@@ -1,8 +1,8 @@
 library(tools)
 
-PATH_FIT <- "resultados/svm/fit2.Rda"
-PATH_PRED <- "resultados/svm/pred2.Rda"
-PATH_IMAGE <- "resultados/svm/image2.RData"
+PATH_FIT <- "resultados/svm/fit3.Rda"
+PATH_PRED <- "resultados/svm/pred3.Rda"
+PATH_IMAGE <- "resultados/svm/image3.RData"
 
 load("rda/alemao_base_completa.Rda")
 
@@ -14,7 +14,7 @@ trainAlgoritmo <- function(dadosP) {
   fit_nv <- train(x = subset(dadosP, select = -c(alc)),
                   y = dadosP$alc, 
                   method = "svmRadial", 
-                  trControl = trainControl(method = "cv", number = 10)
+                  trControl = trainControl(method = "cv", number = 10, classProbs =  TRUE)
   ) 
   return (fit_nv)
 }
