@@ -1,8 +1,8 @@
 library(tools)
 
-PATH_FIT <- "resultados/svm/fit3.Rda"
-PATH_PRED <- "resultados/svm/pred3.Rda"
-PATH_IMAGE <- "resultados/svm/image3.RData"
+PATH_FIT <- "resultados/svm/fit4.Rda"
+PATH_PRED <- "resultados/svm/pred4.Rda"
+PATH_IMAGE <- "resultados/svm/image4.RData"
 
 load("rda/alemao_base_completa.Rda")
 
@@ -11,15 +11,13 @@ print("SVM")
 library(caret)
 
 trainAlgoritmo <- function(dadosP) {
-  fit_nv <- train(x = subset(dadosP, select = -c(alc)),
+  fit_nv <- train(x = dadosP,
                   y = dadosP$alc, 
-                  method = "svmRadial", 
+                  method = "svmPoly", 
                   trControl = trainControl(method = "cv", number = 10, classProbs =  TRUE)
   ) 
   return (fit_nv)
 }
-
-
 
 source(file_path_as_absolute("classificador_default.R"))
 
@@ -38,3 +36,28 @@ teste <- function() {
   uar = (uarA + uarNA) / 2
   uar
 }
+
+if (!require("doParallel")) {
+  install.packages("doParallel")
+}
+library(doParallel); 
+cl <- makeCluster(3); 
+registerDoParallel(cl);
+
+library(caret)
+load(PATH_FIT)
+fit
+
+load(PATH_PRED)
+pred <- predict(fit, dadosFinal)
+
+set.seed(7)
+inTrain <- createDataPartition(y = dadosFinal$alc, p = .80, list = FALSE)
+training <- dadosFinal[ inTrain,]
+testing <- dadosFinal[-inTrain,]
+
+pred <- predict(fit, testing)
+predict(fit, type = "prob")
+
+predict(fit, newdata = dadosFinal)
+predict(fit, newdata = subset(dadosFinal, select = -c(alc)))
