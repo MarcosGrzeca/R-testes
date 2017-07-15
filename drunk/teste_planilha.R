@@ -10,14 +10,15 @@ FIT_SAVE <- "testes/fit_data_my.Rda"
 #save(dat, file = FILE_READ)
 load(FILE_READ)
 
+dat <- as.data.frame(dat)
+
 if (!require("doParallel")) {
   install.packages("doParallel")
 }
 library(doParallel); 
 cl <- makeCluster(8); 
 
-dadosFinal <- subset(dat, select = -c(id) )
-
+dat$id <- NULL
 if (!require("rowr")) {
   install.packages("rowr")
 }
