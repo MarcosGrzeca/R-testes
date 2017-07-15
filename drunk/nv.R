@@ -40,6 +40,9 @@ teste <- function() {
   save(fit, file=PATH_FIT)
   #load(PATH_FIT)
   
+  load(PATH_FIT)
+  fit
+  
   print("Prevendo")
   
   bh_pred <- predict(fit, dadosFinal)
