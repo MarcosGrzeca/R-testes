@@ -27,7 +27,7 @@ library(rowr)
 print("NV")
 library(caret)
 trainAlgoritmo <- function(dadosP) {
-  fit_nv <- train(x = subset(dadosP, select = -c(alc)),
+  fit_nv <- train(x = dadosP,
                   y = dadosP$alc,
                   method = "nb", 
                   trControl = trainControl(method = "cv", number = 10)
