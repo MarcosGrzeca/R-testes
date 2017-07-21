@@ -12,10 +12,10 @@ source(file_path_as_absolute("functions.R"))
 DATABASE <- "icwsm-2016"
 clearConsole();
 dadosQ1 <- query("SELECT id, q1 as resposta, textParser, hashtags, emoticonPos, emoticonNeg FROM tweets WHERE situacao = 'S'")
-dadosQ2 <- query("SELECT id, q2 as resposta, textParser, hashtags, emoticonPos, emoticonNeg FROM tweets WHERE situacao = 'S' AND q1 = '1' AND q2 IS NOT NULL")
-dadosQ3 <- query("SELECT id, q3 as resposta, textParser, hashtags, emoticonPos, emoticonNeg FROM tweets WHERE situacao = 'S' AND q2 = '1' AND q3 IS NOT NULL")
+#dadosQ2 <- query("SELECT id, q2 as resposta, textParser, hashtags, emoticonPos, emoticonNeg FROM tweets WHERE situacao = 'S' AND q1 = '1' AND q2 IS NOT NULL")
+#dadosQ3 <- query("SELECT id, q3 as resposta, textParser, hashtags, emoticonPos, emoticonNeg FROM tweets WHERE situacao = 'S' AND q2 = '1' AND q3 IS NOT NULL")
 
-dados <- dadosQ3
+dados <- dadosQ1
 dados$resposta[is.na(dados$resposta)] <- 0
 dados$resposta <- as.factor(dados$resposta)
 dados$emoticonPos[dados$emoticonPos > 0] <- 1
@@ -42,7 +42,7 @@ it_train = itoken(dados$textParser,
                   ids = dados$id, 
                   progressbar = TRUE)
 
-vocab = create_vocabulary(it_train, ngram = c(3L, 3L))
+vocab = create_vocabulary(it_train, ngram = c(2L, 2L))
 vectorizer = vocab_vectorizer(vocab)
 dtm_train_texto = create_dtm(it_train, vectorizer)
 
@@ -94,7 +94,7 @@ maFinal <- cbind.fill(maFinal, dataFrameHashTag)
 maFinal <- subset(maFinal, select = -c(textParser, id, hashtags) )
 
 #id, q1, q2, q3, textParser, hashtags
-save(maFinal, file="icwsm-2016.Rda")
+save(maFinal, file="icwsm-2016_2.Rda")
 
 library(tools)
 library(caret)
@@ -114,21 +114,21 @@ registerDoMC(4)
 print("Treinando")
 fit <- train(x = subset(training, select = -c(resposta)),
                 y = training$resposta, 
-                method = "svmRadial", 
+                method = "svmPoly", 
                 trControl = trainControl(method = "cv", number = 5)
 ) 
 
 
 
 fit
-save(fit, file="resultados/fit.Rda")
+save(fit, file="resultados/fit2.Rda")
 #load("resultados/fit.Rda")
 
 print("Prevendo")
 
 predicao <- predict(fit, subset(testing, select = -c(resposta)))
 predicao
-save(predicao, file="resultados/pred.Rda")
+save(predicao, file="resultados/pred2.Rda")
 #load("resultados/pred.Rda")
 
 print("Resultados")

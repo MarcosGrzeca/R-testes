@@ -100,3 +100,8 @@ if (!require("NLP")) {
   install.packages("NLP")
 }
 require("NLP")
+
+
+
+library(rJava)
+install.packages(c("NLP", "openNLP", "RWeka", "qdap"))

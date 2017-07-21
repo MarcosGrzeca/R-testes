@@ -1,0 +1,16 @@
+Number of docs: 2182 
+174 stopwords: i, me, my, myself, we, our ... 
+ngram_min = 1; ngram_max = 1 
+Vocabulary: 
+       terms terms_counts doc_counts
+  1:     don           64         61
+  2:    girl           29         29
+  3: tequila           54         52
+  4: weekend           29         29
+  5:    good           85         73
+ ---                                
+ 99:      im           30         27
+100:    wine          264        253
+101: tonight           78         77
+102:     one           59         54
+103:    much           39         38
