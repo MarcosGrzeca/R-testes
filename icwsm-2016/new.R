@@ -1,20 +1,22 @@
-load(file="denovo_99_completo.Rda")
+load(file="denovo_99_tntando.Rda")
 
 library(tools)
 library(caret)
-
-if (!require("doMC")) {
-  install.packages("doMC")
-}
 library(doMC)
 
 registerDoMC(8)
 
+split=0.75
+trainIndex <- createDataPartition(maFinal$resposta, p=split, list=FALSE)
+data_train <- maFinal[ trainIndex,]
+data_test <- maFinal[-trainIndex,]
+
+
 print("Treinando")
-fit <- train(x = subset(maFinal, select = -c(resposta)),
-             y = maFinal$resposta, 
-             method = "svmRadial", 
-             trControl = trainControl(method = "cv", number = 5)
+fit <- train(x = subset(data_train, select = -c(resposta)),
+             y = data_train$resposta, 
+             method = "nb", 
+             trControl = trainControl(method = "cv", number = 10)
 ) 
 fit
 
@@ -23,7 +25,7 @@ if (!require("mlbench")) {
 }
 library(mlbench)
 importance <- varImp(fit, scale=FALSE)
-head(importance)
+head(importance, top = 40)
 plot(importance, top = 40)
 
-save.image(file="bora.Rda")
+save.image(file="bora20.Rda")
