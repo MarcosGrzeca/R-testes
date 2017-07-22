@@ -217,7 +217,7 @@ library(NLP)
 library(openNLP)
 library(magrittr)
 
-bora <- as.String(dadosQ1$textParser[1:10])
+bora <- as.String(maFinal$textParser[1:50])
 
 word_ann <- Maxent_Word_Token_Annotator()
 sent_ann <- Maxent_Sent_Token_Annotator()
@@ -271,8 +271,16 @@ library(NLP)
 library(openNLP)
 library(magrittr)
 
-filenames <- Sys.glob("teste.txt")
+filenames <- Sys.glob("files/*.txt")
 filenames
+
+texts <- filenames %>%
+  lapply(readLines) %>%
+  lapply(paste0, collapse = " ") %>%
+  lapply(as.String)
+
+names(texts) <- basename(filenames)
+str(texts, max.level = 1)
 
 annotate_entities <- function(doc, annotation_pipeline) {
   annotations <- annotate(doc, annotation_pipeline)
@@ -286,8 +294,19 @@ itinerants_pipeline <- list(
   Maxent_Entity_Annotator(kind = "location")
 )
 
-texts_annotated <- as.String(dadosQ1$textParser) %>%
+texts_annotated <- as.String(texts) %>%
   lapply(annotate_entities, itinerants_pipeline)
+
+entities <- function(doc, kind) {
+  s <- doc$content
+  a <- annotations(doc)[[1]]
+  if(hasArg(kind)) {
+    k <- sapply(a$features, `[[`, "kind")
+    s[a[k == kind]]
+  } else {
+    s[a[a$type == "entity"]]
+  }
+}
 
 places <- texts_annotated %>%
   lapply(entities, kind = "location")
@@ -295,5 +314,27 @@ places <- texts_annotated %>%
 people <- texts_annotated %>%
   lapply(entities, kind = "person")
 
-places[1]
-people[1]
+places %>%
+  sapply(length)
+
+
+places %>%
+  lapply(unique) %>%
+  sapply(length)
+
+
+people %>%
+  sapply(length)
+
+if (!require("ggmap")) {
+  install.packages("ggmap")
+}
+library(ggmap)
+
+places[["cartwright-peter.txt"]]
+people[["cartwright-peter.txt"]]
+people
+
+all_places <- union(places[["pratt-parley.txt"]], places[["cartwright-peter.txt"]]) %>% union(places[["lee-jarena.txt"]])
+all_places
+
