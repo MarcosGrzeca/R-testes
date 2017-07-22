@@ -95,12 +95,14 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(sentimentr)
 
 sentiments <- sentiment_by(dados$textParser)
+dados$emotiom <- 0
 dados$emotiom[sentiments$ave_sentiment < -0.5] <- -2
 dados$emotiom[sentiments$ave_sentiment < 0] <- -1
 dados$emotiom[sentiments$ave_sentiment > 0] <- 1
 dados$emotiom[sentiments$ave_sentiment > 0.5] <- 2
 
 sentiments <- sentiment_by(dados$hashtags)
+dados$hashEmo <- 0
 dados$hashEmo[sentiments$ave_sentiment < -0.5] <- -2
 dados$hashEmo[sentiments$ave_sentiment < 0] <- -1
 dados$hashEmo[sentiments$ave_sentiment > 0] <- 1
@@ -196,9 +198,17 @@ summary(a$ave_sentiment)
 #plot(out)
 
 
-
-library(rJava)
-
+if (!require("rJava")) {
+  library(rJava)
+}
 if (!require("NLP")) {
   install.packages(c("NLP", "openNLP", "RWeka", "qdap"))
 }
+
+install.packages("openNLPmodels.en",
+                 repos = "http://datacube.wu.ac.at/",
+                 type = "source")
+
+library(NLP)
+library(openNLP)
+library(RWeka)
