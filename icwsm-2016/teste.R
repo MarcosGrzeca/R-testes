@@ -8,7 +8,7 @@ source(file_path_as_absolute("functions.R"))
 #Configuracoes
 DATABASE <- "icwsm-2016"
 clearConsole();
-dadosQ1 <- query("SELECT id, q1 as resposta, textParser, hashtags FROM tweets WHERE situacao = 'S'")
+dadosQ1 <- query("SELECT id, q1 as resposta, textParser, textoParserEmoticom as textoCompleto, hashtags FROM tweets WHERE situacao = 'S'")
 #dadosQ2 <- query("SELECT id, q2 as resposta, textParser, hashtags, emoticonPos, emoticonNeg FROM tweets WHERE situacao = 'S' AND q1 = '1' AND q2 IS NOT NULL")
 #dadosQ3 <- query("SELECT id, q3 as resposta, textParser, hashtags, emoticonPos, emoticonNeg FROM tweets WHERE situacao = 'S' AND q2 = '1' AND q3 IS NOT NULL")
 
@@ -94,8 +94,14 @@ pacman::p_load_current_gh("trinker/lexicon", "trinker/sentimentr")
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(sentimentr)
 
-sentiments <- sentiment_by(dados$textParser)
-dados$emotiom <- 0
+sentiments <- sentiment_by(dados$textoCompleto)
+dados$sentiment <- sentiments$ave_sentiment
+
+
+sentimentsHash <- sentiment_by(dados$hashtags)
+dados$sentimentH <- sentimentsHash$ave_sentiment
+
+dados$sentimentHdados$emotiom <- 0
 dados$emotiom[sentiments$ave_sentiment < -0.5] <- -2
 dados$emotiom[sentiments$ave_sentiment < 0] <- -1
 dados$emotiom[sentiments$ave_sentiment > 0] <- 1
@@ -107,6 +113,11 @@ dados$hashEmo[sentiments$ave_sentiment < -0.5] <- -2
 dados$hashEmo[sentiments$ave_sentiment < 0] <- -1
 dados$hashEmo[sentiments$ave_sentiment > 0] <- 1
 dados$hashEmo[sentiments$ave_sentiment > 0.5] <- 2
+
+fore <- function(x) {
+  query(paste("UPDATE `tweets` SET sentiment = ", x[2], ", sentimentH = ", x[3], " WHERE id = ", x[1], "", sep=""));
+}
+apply(subset(dados, select = c(id, sentiment, sentimentH)), 1, fore)
 
 if (!require("doMC")) {
   install.packages("doMC")
@@ -209,37 +220,38 @@ install.packages("openNLPmodels.en",
                  repos = "http://datacube.wu.ac.at/",
                  type = "source")
 
-library(NLP)
-library(openNLP)
 library(RWeka)
-
 library(NLP)
 library(openNLP)
 library(magrittr)
 
-bora <- as.String(maFinal$textParser[1:50])
+save(dados, file="teste.Rda")
+
+bora <- as.String(dados$textoCompleto[12])
+bora
+
+#bio_annotations <- annotate(bora, list(sent_ann, word_ann))
+#bio_annotations
+#class(bio_annotations)
+#head(bio_annotations)
+
+#bio_doc <- AnnotatedPlainTextDocument(bora, bio_annotations)
+#bio_doc
+#sents(bio_doc) %>% head(2)
 
 word_ann <- Maxent_Word_Token_Annotator()
 sent_ann <- Maxent_Sent_Token_Annotator()
-
-bio_annotations <- annotate(bora, list(sent_ann, word_ann))
-bio_annotations
-class(bio_annotations)
-head(bio_annotations)
-
-bio_doc <- AnnotatedPlainTextDocument(bora, bio_annotations)
-bio_doc
-sents(bio_doc) %>% head(2)
-
 person_ann <- Maxent_Entity_Annotator(kind = "person")
 location_ann <- Maxent_Entity_Annotator(kind = "location")
 organization_ann <- Maxent_Entity_Annotator(kind = "organization")
+money_ann <- Maxent_Entity_Annotator(kind = "money")
 
 pipeline <- list(sent_ann,
                  word_ann,
                  person_ann,
                  location_ann,
-                 organization_ann)
+                 organization_ann,
+                 money_ann)
 bio_annotations <- annotate(bora, pipeline)
 bio_doc <- AnnotatedPlainTextDocument(bora, bio_annotations)
 
@@ -255,9 +267,16 @@ entities <- function(doc, kind) {
   }
 }
 
-entities(bio_doc, kind = "person")
-entities(bio_doc, kind = "location")
+bora
+teste <- entities(bio_doc, kind = "person")
+ncol(teste)
+teste
+teste <- entities(bio_doc, kind = "location")
+nrow(teste)
+teste2 <- as.data.frame(teste)
+
 entities(bio_doc, kind = "organization")
+entities(bio_doc, kind = "money")
 
 
 #com analise de sentimentos das palabras e hashtags
@@ -338,3 +357,5 @@ people
 all_places <- union(places[["pratt-parley.txt"]], places[["cartwright-peter.txt"]]) %>% union(places[["lee-jarena.txt"]])
 all_places
 
+
+#https://rpubs.com/lmullen/nlp-chapter

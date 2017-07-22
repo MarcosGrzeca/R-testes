@@ -23,7 +23,21 @@ query <- function(sql) {
   mydb = dbConnect(MySQL(), user='root', password='', dbname=DATABASE, host='localhost')
   rs = dbSendQuery(mydb, sql);
   dataBD <- fetch(rs, n=-1)
-  #dataBD <- fetch(rs, getNumRows(mydb, "WAVELENGTH"))
+  huh <- dbHasCompleted(rs)
+  dbClearResult(rs)
+  dbDisconnect(mydb)
+  return (dataBD)
+}
+
+connect <- function() {
+  dbDataType(RMySQL::MySQL(), "a")
+  return (dbConnect(MySQL(), user='root', password='', dbname=DATABASE, host='localhost'))
+}
+
+queryConnection <- function(mydb, sql) {
+  dbDataType(RMySQL::MySQL(), "a")
+  rs = dbSendQuery(mydb, sql);
+  dataBD <- fetch(rs, n=-1)
   huh <- dbHasCompleted(rs)
   dbClearResult(rs)
   dbDisconnect(mydb)
