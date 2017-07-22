@@ -124,7 +124,7 @@ maFinal <- cbind.fill(dados, dataFrameTexto)
 maFinal <- cbind.fill(maFinal, dataFrameHash)
 maFinal <- subset(maFinal, select = -c(textParser, id, hashtags))
 
-save(maFinal, file="denovo_99.Rda")
+save(maFinal, file="denovo_99_completo.Rda")
 #dump(maFinal, "testes/maFinal_no.csv")
 #maFinal = read.csv("testes/tweet_data_my.csv", header = TRUE)
 #maFinal = read.csv("testes/maFinal_no.csv", header = TRUE)
@@ -212,3 +212,88 @@ install.packages("openNLPmodels.en",
 library(NLP)
 library(openNLP)
 library(RWeka)
+
+library(NLP)
+library(openNLP)
+library(magrittr)
+
+bora <- as.String(dadosQ1$textParser[1:10])
+
+word_ann <- Maxent_Word_Token_Annotator()
+sent_ann <- Maxent_Sent_Token_Annotator()
+
+bio_annotations <- annotate(bora, list(sent_ann, word_ann))
+bio_annotations
+class(bio_annotations)
+head(bio_annotations)
+
+bio_doc <- AnnotatedPlainTextDocument(bora, bio_annotations)
+bio_doc
+sents(bio_doc) %>% head(2)
+
+person_ann <- Maxent_Entity_Annotator(kind = "person")
+location_ann <- Maxent_Entity_Annotator(kind = "location")
+organization_ann <- Maxent_Entity_Annotator(kind = "organization")
+
+pipeline <- list(sent_ann,
+                 word_ann,
+                 person_ann,
+                 location_ann,
+                 organization_ann)
+bio_annotations <- annotate(bora, pipeline)
+bio_doc <- AnnotatedPlainTextDocument(bora, bio_annotations)
+
+# Extract entities from an AnnotatedPlainTextDocument
+entities <- function(doc, kind) {
+  s <- doc$content
+  a <- annotations(doc)[[1]]
+  if(hasArg(kind)) {
+    k <- sapply(a$features, `[[`, "kind")
+    s[a[k == kind]]
+  } else {
+    s[a[a$type == "entity"]]
+  }
+}
+
+entities(bio_doc, kind = "person")
+entities(bio_doc, kind = "location")
+entities(bio_doc, kind = "organization")
+
+
+#com analise de sentimentos das palabras e hashtags
+#C     Accuracy   Kappa
+#0.25  0.5603493  0
+#0.50  0.5603493  0
+#1.00  0.5603493  0
+
+
+library(NLP)
+library(openNLP)
+library(magrittr)
+
+filenames <- Sys.glob("teste.txt")
+filenames
+
+annotate_entities <- function(doc, annotation_pipeline) {
+  annotations <- annotate(doc, annotation_pipeline)
+  AnnotatedPlainTextDocument(doc, annotations)
+}
+
+itinerants_pipeline <- list(
+  Maxent_Sent_Token_Annotator(),
+  Maxent_Word_Token_Annotator(),
+  Maxent_Entity_Annotator(kind = "person"),
+  Maxent_Entity_Annotator(kind = "location")
+)
+
+texts_annotated <- as.String(dadosQ1$textParser) %>%
+  lapply(annotate_entities, itinerants_pipeline)
+
+places <- texts_annotated %>%
+  lapply(entities, kind = "location")
+
+people <- texts_annotated %>%
+  lapply(entities, kind = "person")
+
+places[1]
+people[1]
