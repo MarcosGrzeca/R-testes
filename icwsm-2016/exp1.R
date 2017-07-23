@@ -81,12 +81,12 @@ dados$emotiomH[dados$sentimentH > 0.5] <- 2
 maFinal <- cbind.fill(dados, dataFrameTexto)
 maFinal <- cbind.fill(maFinal, dataFrameHash)
 maFinal <- subset(maFinal, select = -c(textParser, id, hashtags, textoCompleto))
-maFinal <- subset(maFinal, select = -c(sentiment, sentimentH))
-
-save(maFinal, file="exp1_bag_sentiment.Rda")
+maFinal <- subset(maFinal, select = -c(sentiment, sentimentH, emotiomH))
 
 
-load("exp1_bag.Rda")
+FILE <- "exp1_bag_sentiment.Rda"
+save(maFinal, file=FILE)
+load(FILE)
 library(tools)
 library(caret)
 
