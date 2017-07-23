@@ -8,7 +8,7 @@ source(file_path_as_absolute("functions.R"))
 #Configuracoes
 DATABASE <- "icwsm-2016"
 clearConsole();
-dadosQ1 <- query("SELECT id, q1 as resposta, textParser, textoParserEmoticom as textoCompleto, hashtags, emoticonPos, emoticonNeg FROM tweets WHERE situacao = 'S'")
+dadosQ1 <- query("SELECT id, q1 as resposta, textParser, textoParserEmoticom as textoCompleto, hashtags, emoticonPos, emoticonNeg, sentiment, sentimentH FROM tweets WHERE situacao = 'S'")
 dados <- dadosQ1
 dados$resposta[is.na(dados$resposta)] <- 0
 dados$resposta <- as.factor(dados$resposta)
@@ -61,12 +61,29 @@ clearConsole()
 
 library(rowr)
 
+#sentimentos
+dados$emotiom <- 0
+dados$emotiom[dados$sentiment < 0] <- -1
+dados$emotiom[dados$sentiment < -0.33] <- -2
+dados$emotiom[dados$sentiment < -0.66] <- -3
+dados$emotiom[dados$sentiment > 0] <- 1
+dados$emotiom[dados$sentiment > 0.33] <- 2
+dados$emotiom[dados$sentiment > 0.66] <- 3
+
+dados$emotiomH <- 0
+dados$emotiomH[dados$sentimentH < 0] <- -1
+dados$emotiomH[dados$sentimentH < -0.5] <- -2
+dados$emotiomH[dados$sentimentH > 0] <- 1
+dados$emotiomH[dados$sentimentH > 0.5] <- 2
+
+
+
 maFinal <- cbind.fill(dados, dataFrameTexto)
 maFinal <- cbind.fill(maFinal, dataFrameHash)
 maFinal <- subset(maFinal, select = -c(textParser, id, hashtags, textoCompleto))
+maFinal <- subset(maFinal, select = -c(sentiment, sentimentH))
 
-#
-save(maFinal, file="exp1_bag.Rda")
+save(maFinal, file="exp1_bag_sentiment.Rda")
 
 
 load("exp1_bag.Rda")
@@ -91,8 +108,8 @@ print("Treinando")
 fit <- train(x = subset(data_train, select = -c(resposta)),
              y = data_train$resposta, 
              method = "svmLinear", 
-             trControl = trainControl(method = "cv", number = 5, savePred=T),
-             preProc=c("center", "scale", "nzv")
+             trControl = trainControl(method = "cv", number = 5, savePred=T)
+             #,preProc=c("center", "scale", "nzv")
 ) 
 fit
 
