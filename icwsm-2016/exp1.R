@@ -34,8 +34,8 @@ tok_fun = word_tokenizer
 
 it_train = itoken(dados$textParser, 
                   preprocessor = prep_fun, 
-                  #tokenizer = stem_tokenizer1,
-                  tokenizer = tok_fun,
+                  tokenizer = stem_tokenizer1,
+#                  tokenizer = tok_fun,
                   ids = dados$id, 
                   progressbar = TRUE)
 vocab = create_vocabulary(it_train, ngram = c(3L, 3L))
@@ -63,7 +63,8 @@ maFinal <- cbind.fill(dados, dataFrameTexto)
 maFinal <- cbind.fill(maFinal, dataFrameHash)
 maFinal <- subset(maFinal, select = -c(textParser, id, hashtags, textoCompleto))
 
-save(maFinal, file="exp1.Rda")
+#load("exp1.Rda")
+save(maFinal, file="exp1_stemming.Rda")
 
 library(tools)
 library(caret)
@@ -73,7 +74,7 @@ if (!require("doMC")) {
 }
 library(doMC)
 
-registerDoMC(4)
+registerDoMC(7)
 
 
 set.seed(10)
@@ -86,11 +87,12 @@ print("Treinando")
 fit <- train(x = subset(data_train, select = -c(resposta)),
              y = data_train$resposta, 
              method = "svmLinear", 
-             trControl = trainControl(method = "cv", number = 5)
+             trControl = trainControl(method = "cv", number = 5, savePred=T)
 ) 
 fit
 
 library(mlbench)
 
+data_test <- as.data.frame(unclass(data_test))
 pred <- predict(fit, subset(data_test, select = -c(resposta)))
 confusionMatrix(data = pred, data_test$resposta, positive="1")
