@@ -7,27 +7,25 @@ library(doMC)
 
 registerDoMC(6)
 
-#dim(maFinal)
-#nzv <- nearZeroVar(maFinal)
-#nzv
-#maFinal <- maFinal[, -nzv]
-#dim(maFinal)
+colnames(maFinal)
 
+maFinal = subset(maFinal, select = -c(emoticonPos, emoticonNeg, emotiom, emotiomH, personCount, localCount, organizationCount, moneyCount))
 
-set.seed(10)
-split=0.70
-trainIndex <- createDataPartition(maFinal$resposta, p=split, list=FALSE)
-data_train <- as.data.frame(unclass(maFinal[ trainIndex,]))
-data_test <- maFinal[-trainIndex,]
+#set.seed(10)
+#split=0.80
+#trainIndex <- createDataPartition(maFinal$resposta, p=split, list=FALSE)
+#data_train <- as.data.frame(unclass(maFinal[ trainIndex,]))
+#data_test <- maFinal[-trainIndex,]
 
 
 print("Treinando")
-fit <- train(x = subset(data_train, select = -c(resposta)),
-             y = data_train$resposta, 
+fit <- train(x = subset(maFinal, select = -c(resposta)),
+             y = maFinal$resposta, 
              method = "svmLinear", 
-             trControl = trainControl(method = "cv", number = 5, savePred=T)
-             #,preProc=c("center", "scale", "nzv")
+             trControl = trainControl(method = "cv", number = 10, savePred=T)
 ) 
+#dentro do tr metric = "ROC"
+#,preProc=c("center", "scale", "nzv")
 fit
 
 #if (!require("mlbench")) {
@@ -46,5 +44,23 @@ fit
 
 #aa <- predict(fit, subset(maFinal, select = -c(resposta)))
 #confusionMatrix(data = aa, maFinal$resposta)
-aa <- predict(fit, subset(data_test, select = -c(resposta)))
-confusionMatrix(data = aa, data_test$resposta, positive="1")
+aa <- predict(fit, subset(maFinal, select = -c(resposta)))
+confusionMatrix(data = aa, maFinal$resposta, positive="1")
+
+
+trellis.par.set(caretTheme())
+plot(fit) 
+#plot(gbmFit2, metric = "Kappa")
+
+
+##Comparar os modelos
+#resamps <- resamples(list(GBM = gbmFit3,
+#                          SVM = svmFit,
+#                          RDA = rdaFit))
+#resamps
+
+#trellis.par.set(theme1)
+#bwplot(resamps, layout = c(3, 1))
+
+#trellis.par.set(caretTheme())
+#dotplot(resamps, metric = "ROC")
